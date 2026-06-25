@@ -272,6 +272,30 @@ React 或 Vue 依赖识别框架，例如可以继续执行：
 pnpm g component --app admin-web --scope app --name app-header
 ```
 
+框架识别遵循以下规则：
+
+- 应用包名必须为 `@apps/<应用目录名>`。
+- React 应用必须直接声明 `react` 依赖。
+- Vue 应用必须直接声明 `vue` 依赖。
+- 同一个应用不能同时直接声明 `react` 和 `vue`，否则生成器会拒绝继续执行。
+- 框架识别不依赖应用名，因此不要求名称包含 `react` 或 `vue`。
+
+创建应用后，可以继续生成完整的业务结构：
+
+```bash
+pnpm g feature --app admin-web --name account-center
+pnpm g page --app admin-web --name account-detail
+pnpm g component --app admin-web --scope app --name app-header
+pnpm g store --app admin-web --name user-session
+pnpm g hook --app admin-web --name pagination
+```
+
+Vue 应用应把最后一条替换为：
+
+```bash
+pnpm g composable --app portal-web --name pagination
+```
+
 ### 5.1 生成 Feature
 
 React：
@@ -848,6 +872,35 @@ Vue 应用也会自动包含相同脚本。
 
 该命令不会自动提交或创建 Git Tag。
 
+版本号必须使用完整 SemVer，例如：
+
+```txt
+1.2.3
+1.2.3-beta.1
+1.2.3+build.5
+```
+
+不接受以下写法：
+
+```txt
+v1.2.3
+1.2
+1.0.0-01
+1.0.0-alpha.01
+```
+
+数字形式的预发布标识不能包含前导零。版本递增支持超过 JavaScript 安全整数范围的
+超大版本段，不会因为数字精度导致错误结果。
+
+修改应用模板、版本脚本或代码生成器后，执行：
+
+```bash
+pnpm verify:app-templates
+```
+
+该命令会真实生成临时 React 和 Vue 应用，并验证 lint、类型检查、测试、构建、应用版本
+命令以及自定义应用名下的组件生成。验证结束后会删除临时应用。
+
 ### 升级 Node、pnpm 或核心构建工具
 
 升级需要在同一个变更中同步：
@@ -930,6 +983,53 @@ apps/vue-web/dist/
 1. 确认名称是否输入正确。
 2. 检查现有模块是否可以直接扩展。
 3. 需要替换时由开发者手动评估和修改，不要删除文件后盲目重新生成。
+
+### 自定义名称应用无法继续生成代码
+
+先检查应用目录和包名是否一致：
+
+```txt
+目录：apps/admin-web
+包名：@apps/admin-web
+```
+
+然后检查 `package.json` 是否直接声明了目标框架依赖。React 应用需要 `react`，Vue
+应用需要 `vue`。不要在同一应用中同时直接声明两个框架。
+
+可以先执行 dry-run 查看错误：
+
+```bash
+pnpm g component \
+  --app admin-web \
+  --scope app \
+  --name app-header \
+  --dry-run
+```
+
+### 应用版本命令提示 SemVer 无效
+
+使用完整的 `主版本.次版本.补丁版本`：
+
+```bash
+pnpm version:app --app admin-web --set 1.2.3
+```
+
+不要添加 `v` 前缀，也不要省略补丁位。预发布版本中的纯数字标识不能有前导零，例如
+`1.0.0-beta.1` 合法，`1.0.0-beta.01` 非法。
+
+正式修改前可以预览：
+
+```bash
+pnpm version:app --app admin-web --bump patch --dry-run
+```
+
+### 应用同时声明 React 和 Vue 后生成器报错
+
+这是主动保护，不是生成器故障。业务应用必须明确属于 React 或 Vue 技术栈，不能依靠
+生成器猜测应该输出 `.tsx` 还是 `.vue`。
+
+如果另一个框架只是间接依赖，不要把它直接加入应用 `dependencies`。如果确实需要双框架
+运行时，应将该应用视为特殊架构单独设计，不使用当前标准业务生成器。
 
 ### 新页面生成后无法访问
 

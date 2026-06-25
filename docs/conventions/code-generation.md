@@ -106,6 +106,13 @@ pnpm test:app admin-web
 生成器会读取目标应用 `package.json` 的直接依赖识别 React 或 Vue，因此 `admin-web`
 等自定义名称应用也可以继续生成 component、feature、page、store、hook 或 composable。
 
+框架识别不依赖目录名称，但要求应用满足以下约束：
+
+- 目录 `apps/admin-web` 对应包名 `@apps/admin-web`。
+- React 应用直接声明 `react`，Vue 应用直接声明 `vue`。
+- 同一应用同时声明 `react` 和 `vue` 时拒绝生成，避免输出错误技术栈文件。
+- 缺少有效 `package.json` 或无法识别框架时拒绝生成。
+
 ### 更新应用版本
 
 每个应用的 `package.json` 都提供版本升级脚本。在应用目录中可以直接执行：
@@ -155,6 +162,13 @@ pnpm version:app --app admin-web --bump patch --dry-run
 
 版本命令只修改目标应用 `package.json`，不会创建 Git commit 或 Tag。
 
+版本必须符合 SemVer 2.0.0。支持稳定版本、预发布版本和构建元数据，例如
+`1.2.3`、`1.2.3-beta.1` 和 `1.2.3+build.5`。
+
+不接受 `v1.2.3`、`1.2` 或数字预发布标识带前导零的版本，例如
+`1.0.0-01`、`1.0.0-alpha.01`。版本递增使用精确整数计算，不受 JavaScript
+安全整数上限影响。
+
 ### 验证应用模板
 
 修改 `templates/apps`、应用依赖或共享 ESLint/Vite 配置后，执行：
@@ -164,7 +178,9 @@ pnpm verify:app-templates
 ```
 
 该命令会临时生成 React/Vue 应用，离线安装依赖并分别运行 lint、typecheck、test 和
-build，最后自动删除验证应用并恢复 Workspace。日常单元测试不会自动执行该重型检查。
+build。它还会验证应用版本命令，以及自定义应用名能否继续生成正确框架的组件。
+
+验证结束后会自动删除临时应用并恢复 Workspace。日常单元测试不会自动执行该重型检查。
 
 ## 组件作用域
 
