@@ -4,6 +4,9 @@
 `extends` 选择与运行环境匹配的配置，并只在本地保留路径别名、源码范围和 JSX 等
 项目差异。
 
+当前基线版本为 TypeScript `6.0.3`。配置显式声明 TypeScript 6 改变过的默认行为，
+避免后续升级或不同工具调用时出现隐式差异。
+
 ## 配置继承关系
 
 ```txt
@@ -30,8 +33,8 @@ base.json
 | `base`            | 创建新的底层配置入口              | tooling 内部继承使用             |
 | `browser`         | 通用浏览器源码，不区分应用或类库  | 作为中间配置                     |
 | `vite-app`        | Vite 驱动的 React、Vue 浏览器应用 | `apps/react-web`、`apps/vue-web` |
-| `library`         | 不依赖 DOM 的纯 TypeScript 包     | `config`、`utils`                |
-| `browser-library` | UI、Fetch、DOM 工具等浏览器共享包 | `request`、React UI、Vue UI      |
+| `library`         | 不依赖 DOM 的纯 TypeScript 包     | `auth`、`utils`                  |
+| `browser-library` | UI、Fetch、DOM 工具等浏览器共享包 | `config`、`observability`、UI    |
 | `node`            | Node.js 脚本、CLI、服务端包       | 后续 Node workspace              |
 
 选择配置时应根据代码实际运行环境，而不是目录位置。例如 `packages/shared/request`
@@ -44,25 +47,34 @@ base.json
 
 所有 TypeScript 项目的共同基线：
 
-| 选项                         | 作用                                    |
-| ---------------------------- | --------------------------------------- |
-| `target: ES2022`             | 使用现代 JavaScript 运行时能力          |
-| `useDefineForClassFields`    | 类字段遵循标准定义语义                  |
-| `module: ESNext`             | 保留 ESM，由 Vite 或其他工具处理模块    |
-| `moduleResolution: Bundler`  | 使用适合现代打包器和 exports 的解析方式 |
-| `allowImportingTsExtensions` | 允许显式导入 TypeScript 扩展名          |
-| `resolveJsonModule`          | 允许类型安全地导入 JSON                 |
-| `isolatedModules`            | 确保文件可以被独立转译                  |
-| `noEmit`                     | TypeScript 只检查类型，不直接产出文件   |
-| `strict`                     | 启用 TypeScript 严格检查                |
-| `noUnusedLocals`             | 禁止未使用的局部变量                    |
-| `noUnusedParameters`         | 禁止未使用的参数                        |
-| `noFallthroughCasesInSwitch` | 防止 switch 分支意外贯穿                |
-| `skipLibCheck`               | 跳过依赖声明文件检查，提高检查速度      |
+| 选项                           | 作用                                    |
+| ------------------------------ | --------------------------------------- |
+| `target: ES2022`               | 使用现代 JavaScript 运行时能力          |
+| `useDefineForClassFields`      | 类字段遵循标准定义语义                  |
+| `module: ESNext`               | 保留 ESM，由 Vite 或其他工具处理模块    |
+| `moduleResolution: Bundler`    | 使用适合现代打包器和 exports 的解析方式 |
+| `types: []`                    | 禁止依赖自动发现的环境全局类型          |
+| `allowImportingTsExtensions`   | 允许显式导入 TypeScript 扩展名          |
+| `resolveJsonModule`            | 允许类型安全地导入 JSON                 |
+| `isolatedModules`              | 确保文件可以被独立转译                  |
+| `noUncheckedSideEffectImports` | 校验 CSS 等副作用导入是否有类型声明     |
+| `noEmit`                       | TypeScript 只检查类型，不直接产出文件   |
+| `strict`                       | 启用 TypeScript 严格检查                |
+| `noUnusedLocals`               | 禁止未使用的局部变量                    |
+| `noUnusedParameters`           | 禁止未使用的参数                        |
+| `noFallthroughCasesInSwitch`   | 防止 switch 分支意外贯穿                |
+| `skipLibCheck`                 | 跳过依赖声明文件检查，提高检查速度      |
 
 `noEmit` 表示当前模板将 TypeScript 用作类型检查器，应用产物由 Vite/Rolldown 生成。
 如果未来某个类库需要用 `tsc` 输出 JavaScript 或声明文件，应新增专用 build 配置，
 不要直接改变所有项目的基础行为。
+
+`types: []` 是 TypeScript 6 的显式环境隔离策略。浏览器、Vite 和 Node.js 类型由对应
+配置入口按需增加，纯 TypeScript 包不会因为根目录安装了 `@types/node` 而意外获得
+`process`、`console` 等全局类型。
+
+启用 `noUncheckedSideEffectImports` 后，UI 包中的 CSS 副作用导入必须由包内
+`styles.d.ts` 声明。这样拼错样式文件路径时能够在类型检查阶段暴露。
 
 ### `browser.json`
 
@@ -131,10 +143,9 @@ base.json
 {
   "extends": "@repo/tsconfig/vite-app",
   "compilerOptions": {
-    "baseUrl": ".",
     "jsx": "react-jsx",
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": ["./src/*"]
     }
   },
   "include": ["src", "vite.config.ts"]
@@ -149,9 +160,8 @@ React 的 JSX 转换方式和应用路径别名属于项目差异，因此留在
 {
   "extends": "@repo/tsconfig/vite-app",
   "compilerOptions": {
-    "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": ["./src/*"]
     }
   },
   "include": ["src/**/*.ts", "src/**/*.vue", "vite.config.ts"]
@@ -165,23 +175,17 @@ Vue SFC 必须显式纳入 `include`，类型检查由 `vue-tsc` 执行。
 ```json
 {
   "extends": "@repo/tsconfig/library",
-  "compilerOptions": {
-    "baseUrl": "."
-  },
   "include": ["src"]
 }
 ```
 
-适用于 `packages/shared/config` 和 `packages/shared/utils`。
+适用于 `packages/shared/auth` 和 `packages/shared/utils`。
 
 ### 浏览器共享包
 
 ```json
 {
   "extends": "@repo/tsconfig/browser-library",
-  "compilerOptions": {
-    "baseUrl": "."
-  },
   "include": ["src"]
 }
 ```
@@ -189,14 +193,14 @@ Vue SFC 必须显式纳入 `include`，类型检查由 `vue-tsc` 执行。
 React UI 需要额外加入 `"jsx": "react-jsx"`，Vue UI 可使用
 `"jsx": "preserve"` 并让 `vue-tsc` 检查 `.vue` 文件。
 
+`packages/shared/config` 使用浏览器标准 `URL`，`packages/shared/observability` 提供
+浏览器控制台 reporter，因此二者也继承 `browser-library`。
+
 ### Node.js 包
 
 ```json
 {
   "extends": "@repo/tsconfig/node",
-  "compilerOptions": {
-    "baseUrl": "."
-  },
   "include": ["src"]
 }
 ```
@@ -206,7 +210,7 @@ React UI 需要额外加入 `"jsx": "react-jsx"`，Vue UI 可使用
 建议只保留项目特有内容：
 
 - `include`、`exclude`。
-- `baseUrl` 和 `paths`。
+- `paths`，目标路径必须使用 `./` 开头的显式相对路径。
 - React/Vue 的 JSX 选项。
 - 项目专属类型声明。
 - 构建工具要求的局部选项。
@@ -222,6 +226,9 @@ React UI 需要额外加入 `"jsx": "react-jsx"`，Vue UI 可使用
 
 TypeScript 的 `paths` 只负责类型解析，不会自动让运行时或打包器识别别名。应用使用
 `@/*` 时，还需要确保 Vite 配置中存在对应别名。
+
+TypeScript 6 不再需要通过 `baseUrl` 配合 `paths`。本仓库不使用已弃用的
+`baseUrl`，别名目标统一写成 `"./src/*"`。
 
 内部 workspace 包应使用包名和 `package.json#exports`：
 

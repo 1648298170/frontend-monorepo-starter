@@ -73,7 +73,7 @@
     "stylelint-config-standard": "catalog:",
     "stylelint-config-standard-scss": "catalog:",
     "turbo": "^2.6.1",
-    "typescript": "^5.9.3",
+    "typescript": "6.0.3",
     "validate-npm-package-name": "catalog:",
     "vite": "^8.1.0",
     "vitest": "^4.0.14",

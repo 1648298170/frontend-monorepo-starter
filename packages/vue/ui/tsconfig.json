@@ -1,7 +1,6 @@
 {
   "extends": "@repo/tsconfig/browser-library",
   "compilerOptions": {
-    "baseUrl": ".",
     "jsx": "preserve"
   },
   "include": ["src/**/*.ts", "src/**/*.vue"]

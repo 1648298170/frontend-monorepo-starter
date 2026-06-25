@@ -1,9 +1,8 @@
 {
   "extends": "@repo/tsconfig/vite-app",
   "compilerOptions": {
-    "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": ["./src/*"]
     }
   },
   "include": [

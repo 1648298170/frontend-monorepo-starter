@@ -22,8 +22,8 @@
 - 包管理：pnpm workspace
 - 任务编排：Turborepo
 - 构建工具：Vite 8，生产构建默认使用 Rolldown
-- Vue 应用：Vue 3 + Vue Router + Pinia + TypeScript
-- React 应用：React + React Router + Zustand 预留 + TypeScript
+- Vue 应用：Vue 3 + Vue Router + Pinia + TypeScript 6
+- React 应用：React + React Router + Zustand + TypeScript 6
 - 代码规范：ESLint + Prettier
 - 测试：Vitest
 
