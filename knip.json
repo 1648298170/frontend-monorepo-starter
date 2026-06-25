@@ -1,0 +1,13 @@
+{
+  "$schema": "https://unpkg.com/knip@6/schema.json",
+  "workspaces": {
+    ".": {
+      "entry": ["scripts/*.mjs"],
+      "project": ["scripts/**/*.mjs"]
+    },
+    "apps/*": {
+      "ignore": ["src/styles/abstracts/**"],
+      "ignoreDependencies": ["sass-embedded"]
+    }
+  }
+}

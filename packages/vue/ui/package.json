@@ -27,6 +27,10 @@
   },
   "devDependencies": {
     "@repo/tsconfig": "workspace:*",
+    "@testing-library/jest-dom": "catalog:",
+    "@testing-library/vue": "catalog:",
+    "@vitejs/plugin-vue": "catalog:",
+    "happy-dom": "catalog:",
     "vue-tsc": "catalog:"
   }
 }

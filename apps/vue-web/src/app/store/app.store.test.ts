@@ -1,7 +1,7 @@
 import { createPinia, setActivePinia } from "pinia";
 import { beforeEach, describe, expect, it } from "vitest";
 
-import { useAppStore } from "./app.store";
+import { useAppStore } from ".";
 
 // Pinia Store 单元测试直接调用 Store 和 Action，不需要挂载 Vue 组件。
 describe("useAppStore", () => {

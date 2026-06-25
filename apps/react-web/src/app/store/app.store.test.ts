@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it } from "vitest";
 
-import { useAppStore } from "./app.store";
+import { useAppStore } from ".";
 
 // Zustand Store 单元测试直接操作 Store API，不需要渲染 React 组件。
 describe("useAppStore", () => {

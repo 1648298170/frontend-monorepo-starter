@@ -215,6 +215,12 @@ React Router、Vue Router、Zustand 和 Pinia 的分层及扩展规范见
 框架无关权限规则、React/Vue Provider 与 Guard 的使用边界见
 [`docs/conventions/authorization.md`](docs/conventions/authorization.md)。
 
+组件、Feature、Page、Store、Hook 和 Composable 的生成命令见
+[`docs/conventions/code-generation.md`](docs/conventions/code-generation.md)。
+
+未使用文件、导出、依赖和 catalog 条目的治理方式见
+[`docs/conventions/dependency-health.md`](docs/conventions/dependency-health.md)。
+
 如果是 Vue 组件或 composable：
 
 ```txt
@@ -238,7 +244,7 @@ apps/react-web
 
 开发环境要求：
 
-- Node.js：`>=22`，Vite 8 实际运行要求不低于 `22.12.0`
+- Node.js：`>=22.12.0`
 - pnpm：`10.18.3`
 - npm：`>=10.9.0 <11`，仅作为 Node.js 工具链保留，不用于安装依赖
 
@@ -281,6 +287,12 @@ pnpm dev:react
 pnpm lint
 ```
 
+依赖健康检查：
+
+```bash
+pnpm lint:unused
+```
+
 类型检查：
 
 ```bash
@@ -315,6 +327,16 @@ Monorepo 根目录不会额外生成统一的 `dist/`。Turbo 已将应用的 `d
 pnpm format
 ```
 
+使用代码生成器：
+
+```bash
+pnpm g --help
+pnpm g component --app react-web --scope app --name app-header
+```
+
+`pnpm generate` 与 `pnpm g` 等价。生成器默认创建测试、拒绝覆盖已有文件，并支持
+`--dry-run` 预览完整变更计划。
+
 ## 当前预留但未实现
 
 以下能力已经在结构或文档中预留，但第一版没有实现：
@@ -324,7 +346,6 @@ pnpm format
 - Storybook
 - Playwright E2E
 - changesets 发包流程
-- 脚手架生成器
 
 其中 GitLab CI 的设计说明在：
 

@@ -23,12 +23,13 @@
   },
   "dependencies": {
     "@repo/design-tokens": "workspace:*",
-    "react": "catalog:",
-    "react-dom": "catalog:"
+    "react": "catalog:"
   },
   "devDependencies": {
     "@repo/tsconfig": "workspace:*",
+    "@testing-library/jest-dom": "catalog:",
+    "@testing-library/react": "catalog:",
     "@types/react": "catalog:",
-    "@types/react-dom": "catalog:"
+    "happy-dom": "catalog:"
   }
 }
