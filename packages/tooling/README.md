@@ -1,7 +1,7 @@
 # Tooling 工程配置
 
 `packages/tooling` 用于集中维护整个 Monorepo 的工程约束。这里不放业务代码，
-而是提供可以被应用和共享包复用的 ESLint、TypeScript 配置。
+而是提供可以被应用和共享包复用的 ESLint、TypeScript 和 Playwright 配置。
 
 ## 为什么独立成包
 
@@ -37,15 +37,21 @@ packages/tooling/
 │  ├─ vite-app.json
 │  ├─ package.json
 │  └─ README.md
+├─ playwright-config/   # 跨应用复用的 Playwright 浏览器、报告和服务策略
+│  ├─ src/index.ts
+│  ├─ package.json
+│  ├─ tsconfig.json
+│  └─ README.md
 └─ README.md
 ```
 
-## 两个配置包的分工
+## 配置包的分工
 
-| 配置包                | 解决的问题                             | 使用位置                 |
-| --------------------- | -------------------------------------- | ------------------------ |
-| `@repo/eslint-config` | 代码质量、框架规范、运行环境和依赖边界 | 根 `eslint.config.js`    |
-| `@repo/tsconfig`      | 编译目标、类型严格度、模块与环境类型   | 各项目的 `tsconfig.json` |
+| 配置包                    | 解决的问题                             | 使用位置                    |
+| ------------------------- | -------------------------------------- | --------------------------- |
+| `@repo/eslint-config`     | 代码质量、框架规范、运行环境和依赖边界 | 根 `eslint.config.js`       |
+| `@repo/tsconfig`          | 编译目标、类型严格度、模块与环境类型   | 各项目的 `tsconfig.json`    |
+| `@repo/playwright-config` | 浏览器、重试、报告和本地服务策略       | 应用 `playwright.config.ts` |
 
 ESLint 配置在仓库根目录统一组合，使 `pnpm lint` 能检查整个仓库。TypeScript 配置由
 每个项目按运行环境选择继承，使 `pnpm typecheck` 可以独立检查各 workspace。
@@ -116,6 +122,7 @@ React 与 Vue 项目的完整接入示例分别见：
 
 - [ESLint 配置说明](./eslint-config/README.md)
 - [TypeScript 配置说明](./tsconfig/README.md)
+- [Playwright 配置说明](./playwright-config/README.md)
 
 ## 修改配置的维护流程
 

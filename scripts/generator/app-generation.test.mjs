@@ -177,8 +177,10 @@ describe("app generation", () => {
     const paths = result.changes.map(({ relativePath }) => relativePath);
 
     expect(paths.some((path) => path.includes(".test."))).toBe(false);
+    expect(paths.some((path) => path.includes(".spec."))).toBe(false);
     expect(paths).toContain("apps/minimal-tests-web/vitest.config.ts");
     expect(paths).toContain("apps/minimal-tests-web/src/test/setup.ts");
+    expect(paths).toContain("apps/minimal-tests-web/playwright.config.ts");
   });
 
   it("allows later generation inside an application with an arbitrary name", async () => {

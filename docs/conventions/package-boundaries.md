@@ -67,11 +67,20 @@ tsconfig/
   library.json
   browser-library.json
   node.json
+
+playwright-config/
+  src/
+    index.ts
+    index.test.ts
 ```
 
 Framework-neutral base configurations must not implicitly enable browser or
 Node.js globals. Consumers compose or extend the environment configuration they
 actually need.
+
+Playwright tooling only owns cross-application execution policy. Business
+fixtures, accounts, test data and page objects stay inside each application's
+`e2e` directory.
 
 ## UI package structure
 

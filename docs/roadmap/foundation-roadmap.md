@@ -17,7 +17,7 @@
 - Tailwind CSS 4、Sass、Design Token 和 Stylelint。
 - ESLint、Prettier、EditorConfig、VS Code 与命名规范。
 - 请求客户端、运行时配置、权限、错误处理和可观测性接口。
-- Vitest、Testing Library、组件测试和脚本测试。
+- Vitest、Testing Library、Playwright、组件测试、脚本测试和双应用 E2E 冒烟。
 - Knip、依赖边界、运行时版本限制和提交前检查。
 - 应用、组件、Feature、Page、Store、Hook、Composable 代码生成器。
 - 应用版本升级命令及 React、Vue 应用模板实建验证。
@@ -67,26 +67,21 @@
 - React、Vue 应用产物可以独立下载。
 - 失败日志能够定位到具体 Workspace 和命令。
 
-### 4.2 Playwright E2E
+### 4.2 Playwright E2E 扩展
 
-只覆盖高价值用户流程，不复制组件测试。
+Playwright 基础能力已经完成：共享配置、应用独立场景、三浏览器项目、HTML/JUnit 报告、
+Trace、截图、失败视频和首页冒烟测试均已落地。
 
-首批建议场景：
+后续只按真实业务补充：
 
-- 应用可以启动并访问首页。
 - 登录、退出和未授权跳转。
 - 核心业务表单提交。
 - 路由懒加载失败后的恢复页面。
 - 权限守卫与受限按钮。
+- 可复用登录态、租户和测试数据夹具。
 
-推荐每个应用维护自己的 E2E 项目，共享登录状态、测试夹具和选择器约定。
-
-验收标准：
-
-- 本地和 CI 使用同一命令运行。
-- 测试失败保存截图、视频或 Trace。
-- 用例不依赖固定执行顺序。
-- 非关键页面不为追求数量增加 E2E。
+继续保持每个应用维护自己的业务场景，共享 tooling 只维护运行策略。非关键页面不为
+追求数量增加 E2E。
 
 ### 4.3 测试覆盖率门禁
 

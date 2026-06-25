@@ -185,6 +185,16 @@ React 的 `src/hooks/useRuntimeConfig.ts` 和 Vue 的
 `BUILD_SOURCEMAP` 和仅由分析命令注入的 `BUILD_ANALYZE` 也属于构建端变量，不会进入
 客户端运行时配置。
 
+Playwright 支持通过进程环境变量指定已经部署的测试目标：
+
+```env
+E2E_BASE_URL=https://test.example.com
+```
+
+`E2E_BASE_URL` 不写入应用 `.env`，也不暴露给浏览器。未设置时 Playwright 根据应用
+`.env` 中的 `DEV_SERVER_PORT` 自动启动本地 Vite；设置后直接测试目标地址，不启动本地
+服务。CI 应通过 GitLab CI/CD Variables 注入实际 test 或 UAT 地址。
+
 ## 共享解析与校验
 
 应用将 `import.meta.env` 传给 `@repo/config`：

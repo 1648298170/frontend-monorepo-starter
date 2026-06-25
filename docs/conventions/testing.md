@@ -3,7 +3,8 @@
 ## 目标
 
 测试用于保护公共契约和关键用户行为，不以追求测试数量或巨大快照为目标。
-当前仓库落地单元测试和组件测试，E2E 作为下一阶段能力保留。
+当前仓库使用 Vitest 保护单元与组件契约，使用 Playwright 保护跨页面和真实浏览器中的
+关键用户行为。
 
 ## 测试层级
 
@@ -58,14 +59,20 @@ React 使用 Testing Library React，Vue 使用 Testing Library Vue。两个应�
 
 ### E2E 测试
 
-Playwright 暂未安装。下一阶段只为高价值流程增加 E2E：
+Playwright 用于高价值用户流程：
 
+- 应用启动和关键路由可访问性。
 - 登录和退出。
 - 核心业务提交。
 - 权限拦截。
-- 应用启动和关键路由可访问性。
+- 真实浏览器中的导航、下载、弹窗和多标签页行为。
 
-E2E 不应重复覆盖所有组件细节。
+E2E 不应重复覆盖所有组件细节，也不应断言 React state、Vue ref 或内部 CSS 类名。
+查询顺序优先使用 `getByRole`、`getByLabel` 和可见文本；只有缺少稳定语义时才增加
+`data-testid`。
+
+当前 React 与 Vue 应用各提供一个首页冒烟用例，验证开发服务、路由、应用挂载和共享 UI
+能够在真实 Chromium 中协同工作。
 
 ## 配置位置
 
@@ -74,8 +81,12 @@ E2E 不应重复覆盖所有组件细节。
 ```txt
 apps/react-web/vitest.config.ts
 apps/react-web/src/test/setup.ts
+apps/react-web/playwright.config.ts
+apps/react-web/e2e/
 apps/vue-web/vitest.config.ts
 apps/vue-web/src/test/setup.ts
+apps/vue-web/playwright.config.ts
+apps/vue-web/e2e/
 ```
 
 独立配置允许 React 和 Vue 使用各自的 Vite 插件，同时共享以下约定：
@@ -85,6 +96,27 @@ apps/vue-web/src/test/setup.ts
 - 自动清理已渲染组件。
 - 覆盖率：V8，输出 text、HTML 和 LCOV。
 - 覆盖率产物：应用自己的 `coverage/`，不提交 Git。
+
+Playwright 的跨应用稳定策略放在
+`packages/tooling/playwright-config`：
+
+- Chromium、Firefox、WebKit 浏览器项目。
+- CI 重试、Worker 和 `test.only` 防护。
+- HTML、JUnit、Trace、失败截图与视频。
+- 本地 Vite 服务自动启动和复用。
+- 每个应用独立的 `reports/playwright/<app>` 报告目录。
+
+业务账号、测试数据、登录态和页面夹具属于应用，不进入 tooling。建议按需求逐步增加：
+
+```txt
+e2e/
+  fixtures/       # 登录态、租户和测试数据装配
+  pages/          # 多个场景重复操作同一页面后再引入
+  smoke.spec.ts   # 启动和关键路由冒烟
+  auth.spec.ts    # 认证业务流程
+```
+
+页面对象应按业务域保持小接口，不创建覆盖整个系统的巨型 Page Object。
 
 ## 常用命令
 
@@ -107,6 +139,53 @@ pnpm --filter @apps/vue-web test
 pnpm --filter @apps/react-web test:coverage
 pnpm --filter @apps/vue-web test:coverage
 ```
+
+首次运行 E2E 前安装 Chromium：
+
+```bash
+pnpm test:e2e:install
+```
+
+日常运行两个应用的 Chromium E2E：
+
+```bash
+pnpm test:e2e
+```
+
+只运行一个应用：
+
+```bash
+pnpm test:e2e:react
+pnpm test:e2e:vue
+```
+
+调试单个应用：
+
+```bash
+pnpm --filter @apps/react-web test:e2e:ui
+pnpm --filter @apps/vue-web test:e2e:headed
+```
+
+需要完整跨浏览器回归时，先安装全部浏览器，再执行：
+
+```bash
+pnpm test:e2e:install:all
+pnpm test:e2e:all
+```
+
+测试已经部署的 test 或 UAT 环境时，通过 `E2E_BASE_URL` 覆盖目标地址。此时 Playwright
+不会启动本地 Vite：
+
+```bash
+cross-env E2E_BASE_URL=https://test.example.com \
+  pnpm --filter @apps/react-web test:e2e
+```
+
+PowerShell 也可以先执行 `$env:E2E_BASE_URL="https://test.example.com"`，再运行应用
+E2E 命令。
+
+HTML、JUnit、Trace、截图和视频统一输出到 `reports/playwright/<app>`，该目录不提交
+Git。失败后可以运行应用的 `test:e2e:report` 查看 HTML 报告。
 
 ## 覆盖率策略
 

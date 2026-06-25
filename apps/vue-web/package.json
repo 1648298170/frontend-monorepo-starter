@@ -17,6 +17,11 @@
     "typecheck": "vue-tsc -b",
     "test": "vitest run --passWithNoTests",
     "test:coverage": "vitest run --coverage",
+    "test:e2e": "playwright test --project=chromium",
+    "test:e2e:all": "playwright test",
+    "test:e2e:ui": "playwright test --ui --project=chromium",
+    "test:e2e:headed": "playwright test --headed --project=chromium",
+    "test:e2e:report": "playwright show-report ../../reports/playwright/vue-web/html",
     "version:patch": "node ../../scripts/update-app-version.mjs --bump patch",
     "version:minor": "node ../../scripts/update-app-version.mjs --bump minor",
     "version:major": "node ../../scripts/update-app-version.mjs --bump major",
@@ -34,6 +39,8 @@
     "vue-router": "catalog:"
   },
   "devDependencies": {
+    "@playwright/test": "catalog:",
+    "@repo/playwright-config": "workspace:*",
     "@repo/tsconfig": "workspace:*",
     "@tailwindcss/vite": "catalog:",
     "@testing-library/jest-dom": "catalog:",

@@ -6,8 +6,10 @@
     }
   },
   "include": [
+    "e2e/**/*.ts",
     "src/**/*.ts",
     "src/**/*.vue",
+    "playwright.config.ts",
     "vite.config.ts",
     "vitest.config.ts"
   ]

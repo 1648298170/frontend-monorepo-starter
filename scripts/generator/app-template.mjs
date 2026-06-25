@@ -51,6 +51,7 @@ pnpm --filter @apps/${appName} dev
 pnpm --filter @apps/${appName} lint
 pnpm --filter @apps/${appName} typecheck
 pnpm --filter @apps/${appName} test
+pnpm --filter @apps/${appName} test:e2e
 pnpm --filter @apps/${appName} build
 pnpm --filter @apps/${appName} version:patch
 \`\`\`
@@ -62,6 +63,9 @@ pnpm --filter @apps/${appName} version:patch
 默认开发地址为 \`http://localhost:${port}\`。端口和公共环境变量位于 \`.env\`，本机
 覆盖请写入不提交 Git 的 \`.env.local\`。
 
+首次执行 E2E 前在仓库根目录运行 \`pnpm test:e2e:install\` 安装 Chromium。设置
+\`E2E_BASE_URL\` 时可以复用同一套用例测试已部署的 test 或 UAT 环境。
+
 ## 目录职责
 
 - \`src/app\`：应用装配、路由、全局 Store、运行时服务和错误处理。
@@ -69,6 +73,7 @@ pnpm --filter @apps/${appName} version:patch
 - \`src/features\`：独立业务能力。
 - \`src/styles\`：Tailwind、Sass 和应用全局样式。
 - \`src/test\`：Vitest 全局测试配置。
+- \`e2e\`：Playwright 端到端测试场景。
 
 新增代码需要附带必要中文注释，并在提交前运行 lint、typecheck、test 和 build。
 完整项目说明见仓库根目录 \`docs/guides/project-guide.md\`。
@@ -88,7 +93,7 @@ function createTemplateMetadata(framework) {
   )}\n`;
 }
 
-// 加载独立应用模板；skipTest 只过滤测试文件，不改变测试配置和依赖。
+// 加载独立应用模板；skipTest 过滤 Vitest 与 Playwright 用例，不改变测试配置和依赖。
 export async function loadAppTemplate({
   workspaceRoot,
   appName,
@@ -109,7 +114,7 @@ export async function loadAppTemplate({
   const files = templateFiles
     .filter(
       ({ relativePath }) =>
-        !skipTest || !/\.test\.(?:ts|tsx)$/.test(relativePath)
+        !skipTest || !/\.(?:test|spec)\.(?:ts|tsx)$/.test(relativePath)
     )
     .map(({ relativePath, content }) => ({
       relativePath,

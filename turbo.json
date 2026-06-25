@@ -28,6 +28,14 @@
     "test": {
       "dependsOn": ["^build"]
     },
+    "test:e2e": {
+      "cache": false,
+      "persistent": false
+    },
+    "test:e2e:all": {
+      "cache": false,
+      "persistent": false
+    },
     "clean": {
       "cache": false
     }

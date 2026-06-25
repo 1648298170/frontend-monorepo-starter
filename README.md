@@ -25,7 +25,7 @@
 - Vue 应用：Vue 3 + Vue Router + Pinia + TypeScript 6
 - React 应用：React + React Router + Zustand + TypeScript 6
 - 代码规范：ESLint + Prettier
-- 测试：Vitest
+- 测试：Vitest + Testing Library + Playwright
 
 GitLab CI 已保留设计文档，但第一版不创建 `.gitlab-ci.yml`。
 
@@ -319,6 +319,13 @@ pnpm typecheck
 pnpm test
 ```
 
+首次安装 Playwright Chromium 并运行双应用 E2E：
+
+```bash
+pnpm test:e2e:install
+pnpm test:e2e
+```
+
 构建：
 
 ```bash
@@ -359,7 +366,6 @@ pnpm g component --app react-web --scope app --name app-header
 - GitLab CI
 - 自动部署
 - Storybook
-- Playwright E2E
 - changesets 发包流程
 
 其中 GitLab CI 的设计说明在：

@@ -27,16 +27,16 @@
 
 核心技术：
 
-| 分类      | 技术                                                  |
-| --------- | ----------------------------------------------------- |
-| Workspace | pnpm workspace                                        |
-| 任务编排  | Turborepo                                             |
-| 构建      | Vite 8 + Rolldown                                     |
-| React     | React 19、React Router、Zustand                       |
-| Vue       | Vue 3、Vue Router、Pinia                              |
-| 样式      | Tailwind CSS 4、Sass、Design Token、Stylelint         |
-| 质量      | TypeScript、ESLint、Prettier、Vitest、Testing Library |
-| 依赖治理  | pnpm catalog、Knip                                    |
+| 分类      | 技术                                             |
+| --------- | ------------------------------------------------ |
+| Workspace | pnpm workspace                                   |
+| 任务编排  | Turborepo                                        |
+| 构建      | Vite 8 + Rolldown                                |
+| React     | React 19、React Router、Zustand                  |
+| Vue       | Vue 3、Vue Router、Pinia                         |
+| 样式      | Tailwind CSS 4、Sass、Design Token、Stylelint    |
+| 质量      | TypeScript、ESLint、Prettier、Vitest、Playwright |
+| 依赖治理  | pnpm catalog、Knip                               |
 
 GitLab CI 当前保留设计文档但不提供 `.gitlab-ci.yml`，接入时应复用仓库现有命令，不另建
 一套质量检查逻辑。
@@ -134,6 +134,21 @@ pnpm dev:vue
 pnpm dev
 ```
 
+首次执行端到端测试前安装 Chromium：
+
+```bash
+pnpm test:e2e:install
+```
+
+运行 React 和 Vue 两个应用的首页 E2E 冒烟测试：
+
+```bash
+pnpm test:e2e
+```
+
+Playwright 会自动启动对应应用，不需要提前运行 `pnpm dev`。完整命令、跨浏览器和远端
+test/UAT 环境用法见 [`../conventions/testing.md`](../conventions/testing.md)。
+
 默认端口由各应用的 `.env` 管理，不写在 package scripts 中。当前模板通常为：
 
 - Vue：`http://localhost:5173`
@@ -204,6 +219,9 @@ src/
   composables/            # Vue 应用级复用逻辑
   styles/                 # 应用样式入口和 Sass 能力
   test/                   # 测试全局配置
+
+e2e/                      # Playwright 端到端业务场景
+playwright.config.ts      # 应用 E2E 地址和报告目录
 ```
 
 ### app
@@ -717,6 +735,24 @@ pnpm --filter @apps/react-web test:coverage
 pnpm --filter @apps/vue-web test:coverage
 ```
 
+首次运行 E2E 时安装 Chromium，然后执行双应用冒烟：
+
+```bash
+pnpm test:e2e:install
+pnpm test:e2e
+```
+
+只运行一个应用或打开可视化调试界面：
+
+```bash
+pnpm test:e2e:react
+pnpm --filter @apps/vue-web test:e2e:ui
+```
+
+E2E 测试放在应用自己的 `e2e/`，通过用户可见行为验证真实浏览器流程。登录夹具、
+测试数据和页面对象也应留在对应应用；浏览器、重试和报告策略由
+`@repo/playwright-config` 统一维护。
+
 页面只有在处理路由参数、权限、多个 Feature 编排或关键业务分支时，才需要单独增加
 页面级测试。纯组合页面通常不重复测试。
 
@@ -775,6 +811,7 @@ pnpm build
 - `lint:unused`：使用 Knip 检查未使用文件、导出和依赖。
 - `typecheck`：检查所有应用和包的 TypeScript 类型。
 - `test`：运行生成器、共享包、UI 包和应用测试。
+- `test:e2e`：自动启动应用并运行 Chromium 端到端测试。
 - `build`：构建两套应用，产物位于各自的 `dist/`。
 
 ## 14. 日常开发工作流

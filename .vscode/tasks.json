@@ -37,6 +37,13 @@
       "type": "shell",
       "command": "pnpm format:check",
       "problemMatcher": []
+    },
+    {
+      "label": "test: e2e",
+      "type": "shell",
+      "command": "pnpm test:e2e",
+      "group": "test",
+      "problemMatcher": []
     }
   ]
 }
