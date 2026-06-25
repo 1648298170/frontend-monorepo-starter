@@ -1,0 +1,7 @@
+{
+  "extends": "@repo/tsconfig/browser-library",
+  "compilerOptions": {
+    "baseUrl": "."
+  },
+  "include": ["src"]
+}

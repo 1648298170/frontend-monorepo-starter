@@ -1,0 +1,41 @@
+<script setup lang="ts">
+import type { MetricCardProps } from "./metric-card.types";
+
+// 导入 UI 包公共表面样式，组件内部只维护自身布局和状态样式。
+import "../../styles/index.css";
+
+withDefaults(defineProps<MetricCardProps>(), {
+  tone: "neutral",
+});
+</script>
+
+<template>
+  <article class="repo-ui-surface repo-metric-card" :data-tone="tone">
+    <span class="repo-metric-card__label">{{ label }}</span>
+    <strong class="repo-metric-card__value">{{ value }}</strong>
+  </article>
+</template>
+
+<style scoped>
+.repo-metric-card {
+  display: grid;
+  gap: var(--repo-ui-space-2);
+  padding: var(--repo-ui-space-4);
+}
+
+.repo-metric-card[data-tone="success"] {
+  border-color: var(--repo-ui-color-success-border);
+  background: var(--repo-ui-color-success-surface);
+}
+
+.repo-metric-card__label {
+  color: var(--repo-ui-color-text-muted);
+  font-size: var(--repo-ui-font-size-small);
+}
+
+.repo-metric-card__value {
+  color: var(--repo-ui-color-text);
+  font-size: var(--repo-ui-font-size-large);
+  line-height: 1.2;
+}
+</style>

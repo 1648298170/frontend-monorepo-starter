@@ -1,0 +1,35 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "tasks": {
+    "dev": {
+      "cache": false,
+      "persistent": true
+    },
+    "build": {
+      "dependsOn": ["^build"],
+      "env": ["BUILD_SOURCEMAP"]
+    },
+    "@apps/react-web#build": {
+      "dependsOn": ["^build"],
+      "env": ["BUILD_SOURCEMAP"],
+      "outputs": ["dist/**"]
+    },
+    "@apps/vue-web#build": {
+      "dependsOn": ["^build"],
+      "env": ["BUILD_SOURCEMAP"],
+      "outputs": ["dist/**"]
+    },
+    "lint": {
+      "dependsOn": ["^build"]
+    },
+    "typecheck": {
+      "dependsOn": ["^build"]
+    },
+    "test": {
+      "dependsOn": ["^build"]
+    },
+    "clean": {
+      "cache": false
+    }
+  }
+}

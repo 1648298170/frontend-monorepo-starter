@@ -1,0 +1,11 @@
+/* 统一加载跨框架 Design Token，组件样式只消费变量，不重复声明视觉值。 */
+@import "@repo/design-tokens/tokens.css";
+
+/* UI 包内通用的表面容器，适用于卡片、面板等带边框和背景的组件。 */
+.repo-ui-surface {
+  min-width: 0;
+  border: 1px solid var(--repo-ui-color-border);
+  border-radius: var(--repo-ui-radius-medium);
+  background: var(--repo-ui-color-surface);
+  color: var(--repo-ui-color-text);
+}

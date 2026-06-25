@@ -1,0 +1,18 @@
+{
+  "name": "@repo/design-tokens",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./tokens.css": "./src/index.css",
+    "./color.css": "./src/foundations/color.css",
+    "./spacing.css": "./src/foundations/spacing.css",
+    "./radius.css": "./src/foundations/radius.css",
+    "./typography.css": "./src/foundations/typography.css"
+  },
+  "scripts": {
+    "lint": "prettier --check .",
+    "test": "vitest run --passWithNoTests",
+    "clean": "rimraf dist"
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "dev: all",
+      "type": "shell",
+      "command": "pnpm dev",
+      "isBackground": true,
+      "problemMatcher": []
+    },
+    {
+      "label": "dev: react",
+      "type": "shell",
+      "command": "pnpm dev:react",
+      "isBackground": true,
+      "problemMatcher": []
+    },
+    {
+      "label": "dev: vue",
+      "type": "shell",
+      "command": "pnpm dev:vue",
+      "isBackground": true,
+      "problemMatcher": []
+    },
+    {
+      "label": "check: all",
+      "type": "shell",
+      "command": "pnpm lint && pnpm typecheck && pnpm test && pnpm build",
+      "group": {
+        "kind": "test",
+        "isDefault": true
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "format: check",
+      "type": "shell",
+      "command": "pnpm format:check",
+      "problemMatcher": []
+    }
+  ]
+}

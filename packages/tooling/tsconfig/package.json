@@ -1,0 +1,14 @@
+{
+  "name": "@repo/tsconfig",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./base": "./base.json",
+    "./browser": "./browser.json",
+    "./vite-app": "./vite-app.json",
+    "./library": "./library.json",
+    "./browser-library": "./browser-library.json",
+    "./node": "./node.json"
+  }
+}

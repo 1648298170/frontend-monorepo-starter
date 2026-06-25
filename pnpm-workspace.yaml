@@ -1,0 +1,41 @@
+packages:
+  - apps/*
+  - packages/shared/*
+  - packages/vue/*
+  - packages/react/*
+  - packages/tooling/*
+
+catalog:
+  "@testing-library/dom": ^10.4.1
+  "@testing-library/jest-dom": ^6.9.1
+  "@testing-library/react": ^16.3.0
+  "@testing-library/vue": ^8.1.0
+  "@tailwindcss/vite": ^4.3.1
+  "@types/react": ^19.2.7
+  "@types/react-dom": ^19.2.3
+  "@vitest/coverage-v8": ^4.1.9
+  "@vitejs/plugin-react": ^6.0.3
+  "@vitejs/plugin-vue": ^6.0.7
+  cross-env: ^10.1.0
+  eslint-plugin-check-file: ^3.3.1
+  fast-glob: ^3.3.3
+  happy-dom: ^20.0.11
+  pinia: ^3.0.4
+  postcss-html: ^1.8.1
+  postcss-scss: ^4.0.9
+  react: ^19.2.1
+  react-dom: ^19.2.1
+  react-router-dom: ^7.10.1
+  rollup-plugin-visualizer: ^7.0.1
+  sass-embedded: ^1.100.0
+  stylelint: ^17.13.0
+  stylelint-config-recommended-vue: ^1.6.1
+  stylelint-config-standard: ^40.0.0
+  stylelint-config-standard-scss: ^17.0.0
+  tailwindcss: ^4.3.1
+  vue: ^3.5.25
+  vue-router: ^4.6.3
+  vue-tsc: ^3.1.5
+  validate-npm-package-name: ^7.0.2
+  yaml: ^2.9.0
+  zustand: ^5.0.9

@@ -1,0 +1,8 @@
+:root {
+  --repo-ui-color-surface: #fff;
+  --repo-ui-color-border: #d7dee8;
+  --repo-ui-color-text: #172033;
+  --repo-ui-color-text-muted: #5c6675;
+  --repo-ui-color-success-surface: #f1fbf6;
+  --repo-ui-color-success-border: #96d4b7;
+}
