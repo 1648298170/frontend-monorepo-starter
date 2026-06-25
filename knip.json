@@ -3,6 +3,7 @@
   "workspaces": {
     ".": {
       "entry": ["scripts/*.mjs"],
+      "ignore": ["templates/apps/**"],
       "project": ["scripts/**/*.mjs"]
     },
     "apps/*": {

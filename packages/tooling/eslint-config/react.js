@@ -6,11 +6,11 @@ import reactRefresh from "eslint-plugin-react-refresh";
 // 导出 React 应用与 React 包共用的规则。
 export const reactConfig = [
   {
-    // 根据目录约定匹配 React 应用和 React 框架包。
+    // 保留 react-* 目录约定兼容旧消费者，其他业务应用由动态工厂补充。
     files: [
-      "apps/react-*/**/*.{js,jsx,ts,tsx}", // 匹配所有 react-* 应用。
-      "packages/react/**/*.{js,jsx,ts,tsx}", // 匹配共享 React 包。
-    ], // React 文件匹配列表结束。
+      "apps/react-*/**/*.{js,jsx,ts,tsx}",
+      "packages/react/**/*.{js,jsx,ts,tsx}",
+    ],
     plugins: {
       "react-hooks": reactHooks, // 注册 React Hooks 插件。
     }, // React 通用插件结束。
@@ -20,18 +20,56 @@ export const reactConfig = [
   }, // React 通用配置块结束。
 ]; // React 通用配置数组结束。
 
-// 导出仅适用于 Vite React 应用的 Fast Refresh 规则。
+// 根据根配置识别出的应用目录生成 Hooks 与 Fast Refresh 规则。
+export function createReactAppConfig(appDirectories) {
+  const sourceFiles = appDirectories.map(
+    (directory) => `${directory}/**/*.{js,jsx,ts,tsx}`
+  );
+  const componentFiles = appDirectories.map(
+    (directory) => `${directory}/**/*.{jsx,tsx}`
+  );
+
+  if (appDirectories.length === 0) {
+    return [];
+  }
+
+  return [
+    {
+      files: sourceFiles,
+      plugins: {
+        "react-hooks": reactHooks,
+      },
+      rules: {
+        ...reactHooks.configs.recommended.rules,
+      },
+    },
+    {
+      files: componentFiles,
+      plugins: {
+        "react-refresh": reactRefresh,
+      },
+      rules: {
+        "react-refresh/only-export-components": [
+          "warn",
+          { allowConstantExport: true },
+        ],
+      },
+    },
+  ];
+}
+
+// 保留旧导出以兼容已有消费者；根配置改用动态工厂。
 export const reactAppConfig = [
   {
-    files: ["apps/react-*/**/*.{jsx,tsx}"], // 只匹配 React 应用组件文件。
+    files: ["apps/react-*/**/*.{jsx,tsx}"],
     plugins: {
-      "react-refresh": reactRefresh, // 注册 React Fast Refresh 插件。
-    }, // React 应用插件结束。
+      "react-refresh": reactRefresh,
+    },
     rules: {
       "react-refresh/only-export-components": [
-        "warn", // 使用警告避免非关键问题阻断开发。
-        { allowConstantExport: true }, // 允许组件文件同时导出不会破坏热更新的常量。
-      ], // Fast Refresh 规则选项结束。
-    }, // React 应用规则结束。
-  }, // React 应用配置块结束。
-]; // React 应用配置数组结束。
+        "warn",
+        { allowConstantExport: true },
+      ],
+    },
+  },
+];

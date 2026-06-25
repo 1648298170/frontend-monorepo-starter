@@ -33,6 +33,11 @@ async function main() {
 
   if (options["dry-run"]) {
     console.log("\n当前为 dry-run，未写入任何文件。");
+
+    for (const message of messages) {
+      console.log(`提示：${message}`);
+    }
+
     return;
   }
 

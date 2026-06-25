@@ -245,6 +245,26 @@ feature-name/
 
 下面以“账号中心”页面为例。React 和 Vue 任选一套跟随操作。
 
+如果需要创建全新的业务应用，先执行：
+
+```bash
+pnpm g app \
+  --name admin-web \
+  --framework react \
+  --display-name "运营管理后台" \
+  --dry-run
+```
+
+确认计划后移除 `--dry-run`，再运行：
+
+```bash
+pnpm install
+pnpm dev:app admin-web
+```
+
+端口未提供时会自动选择首个未占用端口。完整参数和版本管理命令见
+[`../conventions/code-generation.md`](../conventions/code-generation.md)。
+
 ### 5.1 生成 Feature
 
 React：
@@ -784,7 +804,14 @@ pnpm build
 
 ### 新增业务应用
 
-新增应用不应简单复制后立即修改。需要同步确认：
+优先使用应用生成器，不要复制已有应用后直接修改：
+
+```bash
+pnpm g app --name admin-web --framework react
+pnpm install
+```
+
+生成后仍需要按业务确认：
 
 - `package.json` 名称遵循 `@apps/<app-name>`。
 - 独立环境文件、端口和运行时配置。
@@ -792,6 +819,14 @@ pnpm build
 - Router、状态库、错误边界和请求客户端单例。
 - Turbo 任务能识别 build、lint、typecheck 和 test。
 - README 和本指南补充启动命令与产物位置。
+
+应用版本升级使用：
+
+```bash
+pnpm version:app --app admin-web --bump patch
+```
+
+该命令不会自动提交或创建 Git Tag。
 
 ### 升级 Node、pnpm 或核心构建工具
 

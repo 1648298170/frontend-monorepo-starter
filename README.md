@@ -94,6 +94,11 @@ frontend-monorepo-starter/
     guides/                  # 新同事教学与上手指南
     ci/                      # CI 预留设计
 
+  templates/
+    apps/
+      react/                  # React 标准业务应用生成模板
+      vue/                    # Vue 标准业务应用生成模板
+
   package.json
   pnpm-workspace.yaml
   turbo.json
@@ -340,6 +345,7 @@ pnpm format
 
 ```bash
 pnpm g --help
+pnpm g app --name admin-web --framework react
 pnpm g component --app react-web --scope app --name app-header
 ```
 

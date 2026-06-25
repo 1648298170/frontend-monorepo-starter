@@ -11,5 +11,10 @@ reports
 !apps/*/.env.test
 !apps/*/.env.uat
 !apps/*/.env.production
+!templates/apps/*/.env
+!templates/apps/*/.env.development
+!templates/apps/*/.env.test
+!templates/apps/*/.env.uat
+!templates/apps/*/.env.production
 *.local
 *.tsbuildinfo

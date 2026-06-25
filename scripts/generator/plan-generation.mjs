@@ -1,6 +1,8 @@
-import { access, readFile } from "node:fs/promises";
+import { access, readFile, readdir } from "node:fs/promises";
 import { join, relative } from "node:path";
 
+import { parseSemver } from "../version/semver.mjs";
+import { loadAppTemplate } from "./app-template.mjs";
 import { addExportLine, addPackageExport } from "./file-updates.mjs";
 import {
   componentIndexTemplate,
@@ -47,6 +49,7 @@ const appFrameworks = {
 
 // 第一阶段只开放这些稳定生成类型，新增类型需要同步扩展帮助、文档和测试。
 const supportedTypes = new Set([
+  "app",
   "component",
   "feature",
   "page",
@@ -54,6 +57,8 @@ const supportedTypes = new Set([
   "hook",
   "composable",
 ]);
+
+const appNamePattern = /^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$/;
 
 // 将绝对路径包装成统一的变更描述，CLI 和事务层只依赖这一种结构。
 function createChange(workspaceRoot, path, kind, content) {
@@ -163,6 +168,128 @@ async function requireScopedParent({ workspaceRoot, app, scope, options }) {
       `Page ${page} `
     );
   }
+}
+
+// 读取现有应用声明，用于发现重复包名和开发端口冲突。
+async function readExistingApps(workspaceRoot) {
+  const appsRoot = join(workspaceRoot, "apps");
+  const entries = await readdir(appsRoot, { withFileTypes: true });
+  const apps = [];
+
+  for (const entry of entries) {
+    if (!entry.isDirectory()) {
+      continue;
+    }
+
+    const appRoot = join(appsRoot, entry.name);
+    const packageJson = JSON.parse(
+      await readFile(join(appRoot, "package.json"), "utf8")
+    );
+    const envContent = await readFile(join(appRoot, ".env"), "utf8");
+    const portMatch = envContent.match(/^DEV_SERVER_PORT=(\d+)$/m);
+
+    apps.push({
+      name: entry.name,
+      packageName: packageJson.name,
+      port: portMatch ? Number(portMatch[1]) : undefined,
+    });
+  }
+
+  return apps;
+}
+
+// 端口未指定时从 5173 开始选择首个未被现有应用占用的端口。
+function resolveAppPort(value, existingApps) {
+  const occupiedPorts = new Set(
+    existingApps.map(({ port }) => port).filter(Number.isInteger)
+  );
+
+  if (value !== undefined) {
+    const port = Number(value);
+
+    if (!Number.isInteger(port) || port < 1 || port > 65535) {
+      throw new Error("--port 必须是 1 至 65535 之间的整数。");
+    }
+
+    if (occupiedPorts.has(port)) {
+      throw new Error(`端口 ${port} 已被现有应用使用。`);
+    }
+
+    return port;
+  }
+
+  for (let port = 5173; port <= 65535; port += 1) {
+    if (!occupiedPorts.has(port)) {
+      return port;
+    }
+  }
+
+  throw new Error("没有可分配的开发服务器端口。");
+}
+
+// 完整应用使用独立模板生成，不复制当前示例应用，避免业务演进改变脚手架结果。
+async function planApp(workspaceRoot, options) {
+  const appName = requireOption(options, "name");
+  const framework = requireOption(options, "framework");
+  const displayName = options["display-name"] ?? toDisplayName(appName);
+  const version = options.version ?? "0.1.0";
+  const preset = options.preset ?? "standard";
+
+  if (!appNamePattern.test(appName)) {
+    throw new Error("应用名必须使用以字母开头的 kebab-case。");
+  }
+
+  if (!["react", "vue"].includes(framework)) {
+    throw new Error("--framework 仅支持 react 或 vue。");
+  }
+
+  if (preset !== "standard") {
+    throw new Error("第一阶段 --preset 仅支持 standard。");
+  }
+
+  if (typeof displayName !== "string" || displayName.trim().length === 0) {
+    throw new Error("--display-name 不能为空。");
+  }
+
+  parseSemver(version);
+  const existingApps = await readExistingApps(workspaceRoot);
+  const packageName = `@apps/${appName}`;
+
+  if (
+    existingApps.some(
+      (app) => app.name === appName || app.packageName === packageName
+    )
+  ) {
+    throw new Error(`应用 ${appName} 或包名 ${packageName} 已存在。`);
+  }
+
+  const port = resolveAppPort(options.port, existingApps);
+  const appRoot = join(workspaceRoot, "apps", appName);
+  const templateFiles = await loadAppTemplate({
+    workspaceRoot,
+    appName,
+    displayName: displayName.trim(),
+    framework,
+    port,
+    version,
+    skipTest: options["skip-test"],
+  });
+  const changes = templateFiles.map(({ relativePath, content }) =>
+    createChange(workspaceRoot, join(appRoot, relativePath), "create", content)
+  );
+
+  return {
+    changes,
+    messages: [
+      `应用：${packageName}`,
+      `框架：${framework === "react" ? "React" : "Vue"}`,
+      `端口：${port}`,
+      `目录：apps/${appName}`,
+      `版本：${version}`,
+      `下一步：pnpm install`,
+      `启动：pnpm dev:app ${appName}`,
+    ],
+  };
 }
 
 // 组件规划同时覆盖应用组件、Feature/Page 私有组件和 Workspace UI 组件。
@@ -539,6 +666,10 @@ export async function planGeneration({ workspaceRoot, type, options = {} }) {
     throw new Error(
       `不支持生成类型 ${type ?? "(空)"}，请使用 component、feature、page、store、hook 或 composable。`
     );
+  }
+
+  if (type === "app") {
+    return planApp(workspaceRoot, options);
   }
 
   if (type === "component") {

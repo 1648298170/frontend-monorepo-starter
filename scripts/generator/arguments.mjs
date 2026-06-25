@@ -9,6 +9,10 @@ const supportedOptions = new Set([
   "name",
   "feature",
   "page",
+  "display-name",
+  "port",
+  "version",
+  "preset",
 ]);
 
 // 解析 --key value、--key=value 和布尔开关，不引入额外 CLI 依赖。
@@ -70,6 +74,7 @@ Usage:
   pnpm g <type> [options]
 
 Types:
+  app          生成完整 React 或 Vue 业务应用
   component    生成应用、Feature、Page 或 Workspace UI 组件
   feature      生成业务 Feature
   page         生成页面（不自动修改路由）
@@ -84,11 +89,16 @@ Common options:
   --name <name>
   --feature <feature-name>
   --page <page-name>
+  --display-name <display-name>
+  --port <port>
+  --version <semver>
+  --preset standard
   --dry-run
   --skip-test
   --help
 
 Examples:
+  pnpm g app --name admin-web --framework react --display-name "运营管理后台"
   pnpm g component --app react-web --scope app --name app-header
   pnpm g component --app vue-web --scope feature --feature user --name user-form
   pnpm g component --app react-web --scope page --page order-detail --name order-summary

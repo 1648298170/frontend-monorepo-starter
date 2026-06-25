@@ -290,3 +290,6 @@ Prettier 冲突处理是整个仓库的统一收尾逻辑。放在根配置末�
 
 优先检查目录是否符合 `apps/react-*` 或 `apps/vue-*`，再检查文件扩展名是否包含在
 对应 `files` 模式中。
+根 ESLint 配置会读取 `apps/*/package.json` 的 React/Vue 依赖，动态识别每个应用的
+框架。业务应用目录名不需要包含 `react-` 或 `vue-` 前缀，新生成的 `admin-web`、
+`portal-web` 等应用仍会获得正确的 Hooks、Vue SFC、Fast Refresh 和框架边界规则。

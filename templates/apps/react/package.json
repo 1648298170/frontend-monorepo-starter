@@ -1,0 +1,48 @@
+{
+  "name": "@apps/{{APP_NAME}}",
+  "version": "{{VERSION}}",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "dev:local": "vite --mode development",
+    "dev:test": "vite --mode test",
+    "dev:uat": "vite --mode uat",
+    "build": "tsc -b && vite build",
+    "build:local": "tsc -b && vite build --mode development",
+    "build:test": "tsc -b && vite build --mode test",
+    "build:uat": "tsc -b && vite build --mode uat",
+    "analyze": "tsc -b && cross-env BUILD_ANALYZE=true vite build",
+    "lint": "eslint .",
+    "typecheck": "tsc -b",
+    "test": "vitest run --passWithNoTests",
+    "test:coverage": "vitest run --coverage",
+    "clean": "rimraf dist"
+  },
+  "dependencies": {
+    "@repo/config": "workspace:*",
+    "@repo/observability": "workspace:*",
+    "@repo/react-ui": "workspace:*",
+    "@repo/request": "workspace:*",
+    "@repo/utils": "workspace:*",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "react-router-dom": "catalog:",
+    "zustand": "catalog:"
+  },
+  "devDependencies": {
+    "@repo/tsconfig": "workspace:*",
+    "@tailwindcss/vite": "catalog:",
+    "@testing-library/dom": "catalog:",
+    "@testing-library/jest-dom": "catalog:",
+    "@testing-library/react": "catalog:",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "@vitejs/plugin-react": "catalog:",
+    "cross-env": "catalog:",
+    "happy-dom": "catalog:",
+    "rollup-plugin-visualizer": "catalog:",
+    "sass-embedded": "catalog:",
+    "tailwindcss": "catalog:"
+  }
+}

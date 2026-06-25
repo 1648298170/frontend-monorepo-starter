@@ -19,10 +19,12 @@ Knip 会结合 workspace 的 `package.json`、源码入口、测试配置和构�
 
 ## 精确忽略
 
-`knip.json` 只保留两类必要配置：
+`knip.json` 只保留少量必要配置：
 
 - `scripts/*.mjs` 作为根工作区代码生成和校验脚本入口。
 - 应用 Sass abstracts 目录与 `sass-embedded` 作为 Vite 动态注入能力。
+- `templates/apps/**` 是生成器读取的文本模板，不作为根工作区源码执行；模板依赖由
+  生成后的应用 `package.json` 声明和检查。
 
 Sass abstracts 通过 `vite.config.ts` 的 `additionalData` 注入，源码不会出现普通 import，
 因此需要精确忽略。新增忽略项时必须在配置旁对应到明确的动态加载机制，不能用

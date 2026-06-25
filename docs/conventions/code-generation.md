@@ -26,12 +26,122 @@ pnpm g --help
 
 | 类型         | 作用                                                       |
 | ------------ | ---------------------------------------------------------- |
+| `app`        | 生成完整 React 或 Vue 标准业务应用                         |
 | `component`  | 生成应用级、Feature、Page 或共享 UI 组件                   |
 | `feature`    | 生成业务 Feature 入口及测试                                |
 | `page`       | 生成页面入口及测试，不修改路由                             |
 | `store`      | React 生成 Zustand Store，Vue 生成 Pinia Store，并更新入口 |
 | `hook`       | 生成 React Hook，可放在应用、Feature 或 Page               |
 | `composable` | 生成 Vue Composable，可放在应用、Feature 或 Page           |
+
+## 生成完整应用
+
+生成 React 应用：
+
+```bash
+pnpm g app \
+  --name admin-web \
+  --framework react \
+  --display-name "运营管理后台"
+```
+
+生成 Vue 应用并指定端口和初始版本：
+
+```bash
+pnpm g app \
+  --name portal-web \
+  --framework vue \
+  --display-name "业务门户" \
+  --port 5180 \
+  --version 1.0.0
+```
+
+参数说明：
+
+| 参数             | 必填 | 默认值             | 说明                             |
+| ---------------- | ---- | ------------------ | -------------------------------- |
+| `--name`         | 是   | 无                 | 应用目录名，使用 kebab-case      |
+| `--framework`    | 是   | 无                 | `react` 或 `vue`                 |
+| `--display-name` | 否   | 根据应用名自动生成 | HTML title 和 `VITE_APP_NAME`    |
+| `--port`         | 否   | 首个未占用端口     | 扫描现有应用，从 5173 开始分配   |
+| `--version`      | 否   | `0.1.0`            | 应用 package.json 初始 SemVer    |
+| `--preset`       | 否   | `standard`         | 第一阶段仅支持标准业务模板       |
+| `--skip-test`    | 否   | `false`            | 不生成示例测试，保留测试基础设施 |
+| `--dry-run`      | 否   | `false`            | 只展示文件计划，不写入磁盘       |
+
+标准应用默认包含：
+
+- Vite 8 与 Rolldown 构建配置。
+- React Router + Zustand 或 Vue Router + Pinia。
+- 应用级运行时配置、请求客户端和错误上报单例。
+- 错误边界、路由错误页和首页懒加载。
+- Tailwind CSS 4、Sass 和 Design Token。
+- Vitest、Testing Library 与 happy-dom。
+- local、test、uat、production 环境文件。
+- 示例 Feature、页面、Store、Hook 或 Composable。
+- 应用 README 和 `.template-meta.json`。
+
+模板固定保存在：
+
+```txt
+templates/apps/react/
+templates/apps/vue/
+```
+
+生成器不会运行时复制 `apps/react-web` 或 `apps/vue-web`，因此示例应用的业务修改不会
+意外改变新应用模板。生成完成后执行：
+
+```bash
+pnpm install
+pnpm dev:app admin-web
+```
+
+也可以使用：
+
+```bash
+pnpm build:app admin-web
+pnpm test:app admin-web
+```
+
+### 更新应用版本
+
+升级补丁版本：
+
+```bash
+pnpm version:app --app admin-web --bump patch
+```
+
+升级次版本或主版本：
+
+```bash
+pnpm version:app --app admin-web --bump minor
+pnpm version:app --app admin-web --bump major
+```
+
+指定精确版本：
+
+```bash
+pnpm version:app --app admin-web --set 1.2.0
+```
+
+预览但不修改：
+
+```bash
+pnpm version:app --app admin-web --bump patch --dry-run
+```
+
+版本命令只修改目标应用 `package.json`，不会创建 Git commit 或 Tag。
+
+### 验证应用模板
+
+修改 `templates/apps`、应用依赖或共享 ESLint/Vite 配置后，执行：
+
+```bash
+pnpm verify:app-templates
+```
+
+该命令会临时生成 React/Vue 应用，离线安装依赖并分别运行 lint、typecheck、test 和
+build，最后自动删除验证应用并恢复 Workspace。日常单元测试不会自动执行该重型检查。
 
 ## 组件作用域
 
@@ -169,12 +279,15 @@ pnpm g component \
 
 生成器代码位于 `scripts/generator/`：
 
+- `app-template.mjs`：读取独立应用模板并替换占位符。
 - `arguments.mjs`：解析命令行参数并维护帮助信息。
 - `names.mjs`：统一 kebab-case、PascalCase 和 `use*` 命名。
 - `templates.mjs`：维护 React/Vue 文件模板。
 - `plan-generation.mjs`：决定目录、文件和导出更新。
 - `file-updates.mjs`：安全更新 barrel 与 package exports。
 - `transaction.mjs`：执行写入、冲突校验和失败回滚。
+
+应用版本工具位于 `scripts/version/`，负责 SemVer 校验和 package.json 原子更新。
 
 新增生成类型时，应先扩展规划层测试，再增加模板和 CLI 帮助。不要在模板函数中直接
 读写磁盘，保持“规划”和“提交”分离，才能继续支持 dry-run 与事务回滚。

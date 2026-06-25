@@ -7,6 +7,7 @@ export const browserConfig = [
     // 只为实际运行在浏览器中的源码启用浏览器全局变量。
     files: [
       "apps/**/*.{js,jsx,ts,tsx,vue}", // 匹配所有前端应用源码。
+      "templates/apps/**/*.{js,jsx,ts,tsx,vue}", // 应用模板同样运行在浏览器环境中。
       "packages/react/**/*.{js,jsx,ts,tsx}", // 匹配 React 框架包。
       "packages/vue/**/*.{js,ts,vue}", // 匹配 Vue 框架包。
       "packages/shared/request/**/*.{js,ts}", // Fetch 请求包依赖浏览器类型和全局对象。

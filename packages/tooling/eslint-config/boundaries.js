@@ -63,7 +63,7 @@ export const boundaryConfig = [
   }, // shared 边界配置块结束。
   {
     files: [
-      "apps/react-*/**/*.{js,jsx,ts,tsx}", // 匹配 React 应用源码。
+      "apps/react-*/**/*.{js,jsx,ts,tsx}", // 兼容使用 react-* 命名的 React 应用。
       "packages/react/**/*.{js,jsx,ts,tsx}", // 匹配 React 框架适配包源码。
     ], // React 生态源码范围结束。
     rules: {
@@ -90,7 +90,7 @@ export const boundaryConfig = [
   }, // React 应用边界配置块结束。
   {
     files: [
-      "apps/vue-*/**/*.{js,ts,vue}", // 匹配 Vue 应用源码。
+      "apps/vue-*/**/*.{js,ts,vue}", // 兼容使用 vue-* 命名的 Vue 应用。
       "packages/vue/**/*.{js,ts,vue}", // 匹配 Vue 框架适配包源码。
     ], // Vue 生态源码范围结束。
     rules: {
@@ -118,3 +118,66 @@ export const boundaryConfig = [
     }, // Vue 应用边界规则结束。
   }, // Vue 应用边界配置块结束。
 ]; // 边界配置数组结束。
+
+// 动态应用边界根据 package.json 识别框架，不要求业务应用名称携带 react/vue 前缀。
+export function createAppBoundaryConfig({
+  reactAppDirectories,
+  vueAppDirectories,
+}) {
+  const configs = [];
+
+  if (reactAppDirectories.length > 0) {
+    configs.push({
+      files: reactAppDirectories.map(
+        (directory) => `${directory}/**/*.{js,jsx,ts,tsx}`
+      ),
+      rules: {
+        "no-restricted-imports": [
+          "error",
+          {
+            paths: [{ name: "vue" }, { name: "@repo/vue-ui" }],
+            patterns: [
+              {
+                group: ["vue/**", "@repo/vue-*", "@repo/vue-*/**"],
+                message: "React applications must not depend on Vue modules.",
+              },
+            ],
+          },
+        ],
+      },
+    });
+  }
+
+  if (vueAppDirectories.length > 0) {
+    configs.push({
+      files: vueAppDirectories.map(
+        (directory) => `${directory}/**/*.{js,ts,vue}`
+      ),
+      rules: {
+        "no-restricted-imports": [
+          "error",
+          {
+            paths: [
+              { name: "react" },
+              { name: "react-dom" },
+              { name: "@repo/react-ui" },
+            ],
+            patterns: [
+              {
+                group: [
+                  "react/**",
+                  "react-dom/**",
+                  "@repo/react-*",
+                  "@repo/react-*/**",
+                ],
+                message: "Vue applications must not depend on React modules.",
+              },
+            ],
+          },
+        ],
+      },
+    });
+  }
+
+  return configs;
+}

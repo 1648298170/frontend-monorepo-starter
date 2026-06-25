@@ -7,7 +7,7 @@ import tseslint from "typescript-eslint";
 export const vueConfig = [
   ...vue.configs["flat/recommended"], // 启用 Vue 官方推荐的模板与 SFC 规则。
   {
-    // 对 Vue 目录中的 TypeScript 和 SFC 放宽业务模板需要的规则。
+    // 保留 vue-* 目录约定兼容旧消费者，其他业务应用由动态工厂补充。
     files: ["apps/vue-*/**/*.{ts,vue}", "packages/vue/**/*.{ts,vue}"],
     rules: {
       "@typescript-eslint/no-explicit-any": "off", // 允许业务接入阶段使用 any。
@@ -32,3 +32,36 @@ export const vueConfig = [
     }, // Vue SFC 规则结束。
   }, // Vue SFC 配置块结束。
 ]; // Vue 配置数组结束。
+
+// 根据根配置识别出的 Vue 应用目录生成 TypeScript 与 SFC 规则。
+export function createVueAppConfig(appDirectories) {
+  if (appDirectories.length === 0) {
+    return [];
+  }
+
+  return [
+    {
+      files: appDirectories.map((directory) => `${directory}/**/*.{ts,vue}`),
+      rules: {
+        "@typescript-eslint/no-explicit-any": "off",
+        "@typescript-eslint/no-unused-expressions": "off",
+      },
+    },
+    {
+      files: appDirectories.map((directory) => `${directory}/**/*.vue`),
+      languageOptions: {
+        parserOptions: {
+          parser: tseslint.parser,
+        },
+      },
+      rules: {
+        "vue/attribute-hyphenation": "off",
+        "vue/attributes-order": "off",
+        "vue/first-attribute-linebreak": "off",
+        "vue/max-attributes-per-line": "off",
+        "vue/multi-word-component-names": "off",
+        "vue/singleline-html-element-content-newline": "off",
+      },
+    },
+  ];
+}

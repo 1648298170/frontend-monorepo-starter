@@ -1,0 +1,39 @@
+// 错误页使用全屏居中布局，确保应用主体渲染失败时仍可独立显示。
+.app-error {
+  display: grid;
+  min-height: 100vh;
+  padding: 2rem;
+  place-items: center;
+}
+
+// 限制信息宽度，避免在宽屏上产生过长文本行。
+.app-error__content {
+  max-width: 32rem;
+}
+
+.app-error__eyebrow {
+  color: var(--color-text-muted, #64748b);
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.app-error__title {
+  margin: 0.5rem 0;
+  font-size: 2rem;
+}
+
+.app-error__description {
+  color: var(--color-text-muted, #64748b);
+  line-height: 1.6;
+}
+
+// 恢复按钮使用原生 button，保留键盘和辅助技术可访问性。
+.app-error__action {
+  margin-top: 1rem;
+  border: 0;
+  border-radius: 0.375rem;
+  padding: 0.75rem 1rem;
+  background: #111827;
+  color: #fff;
+  cursor: pointer;
+}
