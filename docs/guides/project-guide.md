@@ -826,6 +826,19 @@ pnpm install
 pnpm version:app --app admin-web --bump patch
 ```
 
+进入应用目录后，也可以使用应用 `package.json` 自带的快捷命令：
+
+```bash
+cd apps/admin-web
+pnpm version:patch
+pnpm version:minor
+pnpm version:major
+pnpm version:set 1.2.0
+```
+
+这些命令会直接修改当前应用 `package.json` 的 `version` 字段。新生成的 React 和
+Vue 应用也会自动包含相同脚本。
+
 该命令不会自动提交或创建 Git Tag。
 
 ### 升级 Node、pnpm 或核心构建工具

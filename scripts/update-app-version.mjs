@@ -2,6 +2,7 @@ import { readFile } from "node:fs/promises";
 import { join, resolve } from "node:path";
 
 import { bumpSemver, parseSemver } from "./version/semver.mjs";
+import { resolveAppName } from "./version/resolve-app-name.mjs";
 import { updatePackageVersion } from "./version/update-package-version.mjs";
 
 const supportedOptions = new Set(["app", "bump", "set", "dry-run"]);
@@ -43,11 +44,13 @@ function parseArguments(argv) {
 
 async function main() {
   const options = parseArguments(process.argv.slice(2));
-  const appName = options.app;
-
-  if (!appName) {
-    throw new Error("缺少必填参数 --app。");
-  }
+  const workspaceRoot = resolve(import.meta.dirname, "..");
+  // 根目录命令使用 --app，应用 package.json 内的命令则从 pnpm 设置的当前目录自动识别。
+  const appName = resolveAppName({
+    workspaceRoot,
+    cwd: process.cwd(),
+    explicitAppName: options.app,
+  });
 
   if (!/^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$/.test(appName)) {
     throw new Error("应用名必须使用以字母开头的 kebab-case。");
@@ -57,7 +60,6 @@ async function main() {
     throw new Error("--bump 与 --set 必须且只能提供一个。");
   }
 
-  const workspaceRoot = resolve(import.meta.dirname, "..");
   const packageJsonPath = join(workspaceRoot, "apps", appName, "package.json");
   const packageJson = JSON.parse(await readFile(packageJsonPath, "utf8"));
   const expectedPackageName = `@apps/${appName}`;

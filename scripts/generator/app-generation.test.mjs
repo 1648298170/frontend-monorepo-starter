@@ -75,6 +75,15 @@ describe("app generation", () => {
     expect(JSON.parse(packageChange.content)).toMatchObject({
       name: "@apps/admin-web",
       version: "1.2.0",
+      scripts: {
+        "version:patch":
+          "node ../../scripts/update-app-version.mjs --bump patch",
+        "version:minor":
+          "node ../../scripts/update-app-version.mjs --bump minor",
+        "version:major":
+          "node ../../scripts/update-app-version.mjs --bump major",
+        "version:set": "node ../../scripts/update-app-version.mjs --set",
+      },
     });
     expect(envChange.content).toContain("DEV_SERVER_PORT=5175");
     expect(envChange.content).toContain("VITE_APP_NAME=运营管理后台");

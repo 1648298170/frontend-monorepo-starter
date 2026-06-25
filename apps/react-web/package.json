@@ -17,6 +17,10 @@
     "typecheck": "tsc -b",
     "test": "vitest run --passWithNoTests",
     "test:coverage": "vitest run --coverage",
+    "version:patch": "node ../../scripts/update-app-version.mjs --bump patch",
+    "version:minor": "node ../../scripts/update-app-version.mjs --bump minor",
+    "version:major": "node ../../scripts/update-app-version.mjs --bump major",
+    "version:set": "node ../../scripts/update-app-version.mjs --set",
     "clean": "rimraf dist"
   },
   "dependencies": {

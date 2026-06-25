@@ -105,6 +105,26 @@ pnpm test:app admin-web
 
 ### 更新应用版本
 
+每个应用的 `package.json` 都提供版本升级脚本。在应用目录中可以直接执行：
+
+```bash
+cd apps/admin-web
+pnpm version:patch
+pnpm version:minor
+pnpm version:major
+pnpm version:set 1.2.0
+```
+
+也可以从仓库根目录通过 filter 调用应用自己的脚本：
+
+```bash
+pnpm --filter @apps/admin-web version:patch
+```
+
+应用内脚本会根据当前工作目录识别应用，不需要重复传入应用名。
+
+仓库根目录继续提供统一入口，适合自动化脚本或批量工具调用。
+
 升级补丁版本：
 
 ```bash

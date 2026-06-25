@@ -44,6 +44,9 @@ async function cleanupVerificationApps() {
     await rm(join(workspaceRoot, "apps", app.name), {
       recursive: true,
       force: true,
+      // Windows 上构建进程退出后可能短暂持有文件句柄，退避重试可避免偶发 EBUSY。
+      maxRetries: 5,
+      retryDelay: 200,
     });
   }
 }
@@ -77,6 +80,9 @@ async function main() {
       for (const command of ["lint", "typecheck", "test", "build"]) {
         runPnpm(["--filter", packageName, command]);
       }
+
+      // 版本命令使用 dry-run 验证模板脚本和应用目录自动识别，不修改临时应用版本。
+      runPnpm(["--filter", packageName, "version:patch", "--dry-run"]);
     }
 
     console.log("React 与 Vue 应用模板完整性验证通过。");
