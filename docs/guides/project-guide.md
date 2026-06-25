@@ -1,7 +1,7 @@
-# 新同事上手指南
+# Frontend Monorepo 项目使用指南
 
-这份指南面向第一次接触本仓库的开发同事。目标不是一次读完所有规范，而是在较短时间
-内完成以下事情：
+这份指南是本项目的统一使用入口，面向新加入的开发同事、日常业务开发者和后续工程
+维护者。目标不是要求一次读完所有规范，而是帮助团队快速完成以下事情：
 
 1. 正确安装项目依赖。
 2. 启动 React 或 Vue 应用。
@@ -10,7 +10,36 @@
 5. 完成样式、状态、请求和测试开发。
 6. 在提交代码前通过项目检查。
 
-建议先完整走一遍“第一天实践”，遇到具体问题时再查看文末的规范索引。
+新同事建议先完整走一遍“第一项实践”，日常开发可以直接查阅对应章节，工程维护者可
+结合文末的规范索引继续深入。
+
+## 0. 项目定位
+
+这是一个支持 React 与 Vue 两套业务应用的 pnpm Monorepo 模板，主要解决：
+
+- 多个业务应用共享工程规范和基础能力。
+- React/Vue 共享框架无关逻辑，同时保持框架实现独立。
+- 统一依赖版本、构建、代码检查、测试和代码生成流程。
+- 为后续新增应用、共享包和 GitLab CI 保留清晰扩展路径。
+
+项目不是 npm 组件发布仓库，也不是单一应用脚手架。当前默认场景是企业业务系统、
+管理后台和内部工具。
+
+核心技术：
+
+| 分类      | 技术                                                  |
+| --------- | ----------------------------------------------------- |
+| Workspace | pnpm workspace                                        |
+| 任务编排  | Turborepo                                             |
+| 构建      | Vite 8 + Rolldown                                     |
+| React     | React 19、React Router、Zustand                       |
+| Vue       | Vue 3、Vue Router、Pinia                              |
+| 样式      | Tailwind CSS 4、Sass、Design Token、Stylelint         |
+| 质量      | TypeScript、ESLint、Prettier、Vitest、Testing Library |
+| 依赖治理  | pnpm catalog、Knip                                    |
+
+GitLab CI 当前保留设计文档但不提供 `.gitlab-ci.yml`，接入时应复用仓库现有命令，不另建
+一套质量检查逻辑。
 
 ## 1. 开发环境准备
 
@@ -685,7 +714,125 @@ pnpm build
 - `test`：运行生成器、共享包、UI 包和应用测试。
 - `build`：构建两套应用，产物位于各自的 `dist/`。
 
-## 14. 常见问题
+## 14. 日常开发工作流
+
+一个普通业务需求推荐按以下顺序推进：
+
+1. 明确需求属于 React 应用、Vue 应用还是共享能力。
+2. 判断代码属于 Page、Feature、应用公共能力还是 Workspace Package。
+3. 使用 `pnpm g ... --dry-run` 预览生成计划。
+4. 生成模块并补充业务实现。
+5. 优先编写纯函数和状态测试，再补组件关键行为测试。
+6. 本地运行目标应用，验证路由、接口、样式和错误状态。
+7. 执行 `pnpm lint`、`pnpm typecheck` 和 `pnpm test`。
+8. 涉及依赖或构建时执行 `pnpm lint:unused` 和 `pnpm build`。
+9. 提交时使用符合 Conventional Commits 的说明。
+
+常见提交类型：
+
+```txt
+feat: 增加新业务能力
+fix: 修复缺陷
+refactor: 调整实现但不改变行为
+test: 增加或调整测试
+docs: 修改文档
+chore: 调整工具链或工程配置
+```
+
+不要在一个提交中混入无关重构、格式化和依赖升级。变更范围越清晰，Code Review 和
+问题回滚越容易。
+
+## 15. 工程维护工作流
+
+### 新增依赖
+
+新增依赖前先确认：
+
+1. 仓库是否已有相同能力。
+2. 依赖应该属于根工具链、具体应用还是某个 Package。
+3. 是否需要两套框架共同使用。
+4. 是否值得加入 pnpm catalog 统一版本。
+
+依赖归属原则：
+
+- 只被一个应用使用：声明在该应用。
+- 只被一个 Package 使用：声明在该 Package。
+- 多个 Workspace 需要统一版本：版本加入 catalog，各使用方仍分别声明。
+- ESLint、Prettier、Turbo 等仓库工具：声明在根目录或 tooling 包。
+
+完成后执行：
+
+```bash
+pnpm install
+pnpm lint:unused
+pnpm typecheck
+pnpm test
+pnpm build
+```
+
+### 新增共享 Package
+
+新增 Package 时需要：
+
+1. 根据是否依赖框架选择 `packages/shared`、`packages/react` 或 `packages/vue`。
+2. 使用 kebab-case 目录名和符合分层规则的 package name。
+3. 添加 `package.json`、`tsconfig.json`、`src/index.ts` 和 README。
+4. 提供标准的 build、lint、typecheck、test、clean scripts。
+5. 只通过 `package.json exports` 暴露稳定公共 API。
+6. 补充单元测试和使用示例。
+7. 运行 `pnpm lint:naming` 验证目录与包名。
+
+### 新增业务应用
+
+新增应用不应简单复制后立即修改。需要同步确认：
+
+- `package.json` 名称遵循 `@apps/<app-name>`。
+- 独立环境文件、端口和运行时配置。
+- Vite、Vitest、TypeScript 和 ESLint 配置。
+- Router、状态库、错误边界和请求客户端单例。
+- Turbo 任务能识别 build、lint、typecheck 和 test。
+- README 和本指南补充启动命令与产物位置。
+
+### 升级 Node、pnpm 或核心构建工具
+
+升级需要在同一个变更中同步：
+
+- `package.json` 的 engines 和 packageManager。
+- `.nvmrc` 与 `.node-version`。
+- `pnpm-workspace.yaml` catalog。
+- `pnpm-lock.yaml`。
+- 运行时版本、Vite 和相关教学文档。
+
+升级后必须完成全量检查，不只运行单个应用。
+
+### 修改共享工程配置
+
+调整 `packages/tooling`、根 ESLint、Stylelint、Prettier 或 Vite 公共规则时：
+
+1. 先说明规则要解决的真实问题。
+2. 评估 React、Vue、共享包和 Node 脚本的影响范围。
+3. 避免通过全局 ignore 掩盖已有错误。
+4. 更新对应规范文档。
+5. 执行全仓检查。
+
+## 16. 项目维护责任
+
+不同目录的主要维护责任：
+
+| 目录                 | 主要责任                                    |
+| -------------------- | ------------------------------------------- |
+| `apps/*`             | 业务团队，负责页面、Feature、路由和应用装配 |
+| `packages/shared/*`  | 公共能力维护者，保证框架无关和 API 稳定     |
+| `packages/react/*`   | React 基础能力维护者                        |
+| `packages/vue/*`     | Vue 基础能力维护者                          |
+| `packages/tooling/*` | 工程维护者，负责统一编译与代码规范          |
+| `scripts/*`          | 工程维护者，负责生成器和仓库校验脚本        |
+| `docs/*`             | 所有贡献者，代码行为变化时同步更新文档      |
+
+共享能力的变更影响范围通常大于应用内部变更。修改共享 Package 或 tooling 前，应检查所有
+消费者，并在 Merge Request 中说明兼容性和迁移方式。
+
+## 17. 常见问题
 
 ### pnpm install 提示 Node 版本不满足
 
@@ -747,7 +894,7 @@ apps/vue-web/dist/
 检查变量或 mixin 是否通过 `src/styles/abstracts/index.scss` 使用 `@forward` 暴露。
 Vite 只会自动注入这个入口。
 
-## 15. 推荐的第一周学习顺序
+## 18. 推荐的第一周学习顺序
 
 ### 第一天
 
@@ -778,7 +925,7 @@ Vite 只会自动注入这个入口。
 - 执行完整检查命令。
 - 尝试解释一个功能为什么属于 app、page、feature 或 package。
 
-## 16. 规范索引
+## 19. 规范索引
 
 | 主题           | 文档                                                                                 |
 | -------------- | ------------------------------------------------------------------------------------ |
