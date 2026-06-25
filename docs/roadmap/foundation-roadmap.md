@@ -296,7 +296,6 @@ ADR 只记录重要且长期有效的决策，不记录普通代码修改。
 - 国际化与多语言资源管理。
 - PWA、离线缓存和安装能力。
 - SSR、SSG 或服务端 BFF。
-- 微前端和跨团队运行时集成。
 - 地图、图表、富文本、低代码等重型业务组件。
 - OpenAPI、GraphQL 或 RPC 客户端生成。
 - 多品牌主题和白标能力。
@@ -309,6 +308,195 @@ ADR 只记录重要且长期有效的决策，不记录普通代码修改。
 3. 谁负责长期升级和故障处理？
 4. React、Vue 是否都需要支持？
 5. 对构建体积、开发体验和 CI 时间有什么影响？
+
+### 8.1 qiankun 微前端预留方案
+
+当前架构支持在指定应用中按需集成 qiankun，但不建议把它默认加入 React、Vue 标准业务
+模板。
+
+现有架构已经具备以下基础：
+
+- `apps/*` 相互隔离，不允许通过源码导入依赖其他应用。
+- 每个应用具有独立路由、状态、运行时服务、环境变量和构建产物。
+- 共享 Package 通过稳定公开入口提供编译期能力。
+- 应用可以独立生成、启动、测试、构建和管理版本。
+
+这些约束与微前端的独立开发、独立部署和运行时组合原则一致。
+
+#### 适用条件
+
+只有出现以下情况时才建议评估 qiankun：
+
+- 多个团队需要独立开发和发布前端应用。
+- 不同业务域具有明确的生命周期和部署边界。
+- 单体应用发布相互阻塞，且模块拆分不能解决。
+- 需要在一个门户中组合 React、Vue 或不同升级节奏的应用。
+
+如果只是同一团队维护的普通后台系统，应继续使用当前 Monorepo、路由懒加载和 Feature
+分层，不要为了技术形式提前引入微前端。
+
+#### 推荐目录
+
+```txt
+apps/
+  admin-shell/                 # qiankun 主应用
+    src/app/
+      micro-frontends/
+        registry.ts            # 子应用注册信息
+        runtime.ts             # qiankun 注册、启动和错误处理
+        micro-app.types.ts     # 主应用内部类型
+      router/
+    src/pages/
+      micro-app/
+        MicroAppPage.tsx
+
+  order-web/                   # 独立构建和部署的子应用
+  customer-web/                # 独立构建和部署的子应用
+
+packages/shared/
+  micro-frontend-contracts/    # 多个应用确实共用通信契约时再创建
+```
+
+qiankun 依赖只声明在主应用中。版本可以加入 pnpm catalog，但其他应用不应因此自动安装
+qiankun。
+
+#### 主应用职责
+
+主应用负责：
+
+- 根据运行时配置生成子应用注册表。
+- 注册并启动 qiankun。
+- 提供子应用挂载容器。
+- 处理加载失败、超时、降级和重试。
+- 统一顶层导航、登录会话和全局布局。
+- 向子应用传递稳定且最小的通信接口。
+
+推荐把启动逻辑封装为一个应用级深模块：
+
+```ts
+export interface MicroFrontendRuntime {
+  start(): void;
+  stop(): void;
+}
+```
+
+页面和业务模块只调用该接口，不直接了解 qiankun 注册参数、沙箱选项和错误恢复细节。
+
+主应用应从运行时配置读取子应用地址：
+
+```env
+VITE_MICRO_ORDER_ENTRY=http://localhost:5180
+VITE_MICRO_CUSTOMER_ENTRY=http://localhost:5181
+```
+
+生产环境优先使用可部署后修改的运行时配置，避免仅调整子应用地址就重新构建主应用。
+
+#### 子应用职责
+
+子应用需要同时支持独立运行和 qiankun 生命周期：
+
+```ts
+export async function bootstrap() {}
+
+export async function mount(props: MicroAppProps) {
+  render(props.container);
+}
+
+export async function unmount() {
+  dispose();
+}
+```
+
+React 子应用每次挂载时创建新的 Root，卸载时调用 `root.unmount()`。Vue 子应用每次挂载时
+创建新的 App 实例，卸载时调用 `app.unmount()`。
+
+子应用还需要处理：
+
+- Router basename 与主应用 `activeRule` 保持一致。
+- 卸载时清理事件监听、订阅、定时器和应用实例。
+- 静态资源地址在独立运行和被加载时都正确。
+- 开发服务器允许主应用跨域加载资源。
+- 部署服务支持 History fallback。
+- CSS 不污染主应用和其他子应用。
+
+#### 通信契约
+
+主应用只传递稳定且较小的接口：
+
+```ts
+export interface MicroAppProps {
+  locale: string;
+  tenantId?: string;
+  getAccessToken(): Promise<string | undefined>;
+  navigate(path: string): void;
+}
+```
+
+不要跨应用传递：
+
+- Zustand 或 Pinia Store。
+- React Context、Vue App 或 Router 实例。
+- 请求客户端单例。
+- 可变的大型全局状态对象。
+- 框架组件实例。
+
+多个应用确实共用事件名称和载荷类型时，再创建
+`packages/shared/micro-frontend-contracts`。该包只能包含类型、事件名和纯协议，不依赖
+qiankun、React、Vue、Router 或状态库。
+
+#### Vite 8 与 Rolldown 风险
+
+qiankun 的经典接入方式主要围绕 webpack、UMD 输出和运行时 public path。当前应用使用
+Vite 8 与 Rolldown，因此子应用接入不能直接视为标准能力。
+
+正式落地前必须先创建最小 POC，验证：
+
+1. React 和 Vue 子应用能否独立运行。
+2. 开发环境能否被主应用正确加载。
+3. 生产构建产物能否暴露 qiankun 生命周期。
+4. JS 沙箱、样式隔离和静态资源路径是否正确。
+5. 路由切换、重复挂载、卸载和重新挂载是否稳定。
+6. 子应用构建失败或加载失败时主应用能否恢复。
+7. Nginx、网关或实际部署平台是否正确支持跨域与 History fallback。
+
+如果需要社区 Vite 适配插件，必须确认它支持当前 Vite 8、Rolldown 和 qiankun 版本，并
+通过锁版本和实建测试保护兼容性。
+
+#### 生成器预留
+
+POC 通过后，可以扩展应用生成器 preset：
+
+```bash
+pnpm g app \
+  --name admin-shell \
+  --framework react \
+  --preset qiankun-host
+
+pnpm g app \
+  --name order-web \
+  --framework vue \
+  --preset qiankun-micro
+```
+
+`standard` 继续作为默认 preset。qiankun preset 不应改变普通业务模板。
+
+生成器可以负责生命周期骨架、目录、类型和测试，但不自动生成业务路由、菜单、权限和
+子应用部署地址。
+
+#### 验收标准
+
+qiankun 集成进入正式模板前必须满足：
+
+- 主应用和每个子应用都能独立启动、测试、构建和部署。
+- 子应用连续挂载和卸载不会残留 DOM、事件监听或全局状态。
+- 主应用刷新任意子应用路由不会返回 404。
+- 子应用加载失败时显示可恢复的错误状态。
+- 通信接口有类型、版本约束和测试。
+- 不存在应用间源码导入和跨应用 Store 共享。
+- Playwright 覆盖主应用导航、子应用加载、刷新和失败恢复。
+- 模板实建验证同时覆盖 `standard` 与已启用的 qiankun preset。
+
+在这些条件满足前，qiankun 只保留为单个应用的专项集成，不加入第一阶段标准模板。
 
 ## 9. 明确暂缓或不推荐
 
