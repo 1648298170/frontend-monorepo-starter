@@ -15,6 +15,11 @@
 
 React 和 TypeScript 使用 VS Code 内置语言服务，不需要额外 React 扩展。
 
+如果 `.vscode/settings.json` 中的 `stylelint.validate` 提示“未知的配置设置”，说明当前
+VS Code Profile 尚未安装或启用 `stylelint.vscode-stylelint`。打开扩展面板执行
+**Install Workspace Recommended Extensions**，然后重新加载窗口。不要删除该设置，
+因为它负责让 Stylelint 扩展额外检查 SCSS、Sass 和 Vue SFC。
+
 ## 保存行为
 
 保存文件时执行：
