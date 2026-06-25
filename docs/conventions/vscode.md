@@ -33,6 +33,15 @@ VS Code 只负责快速反馈，提交前仍会由 Husky 执行 lint-staged、�
 node_modules/typescript/lib
 ```
 
+`.vscode/settings.json` 通过以下新版 VS Code 设置指定 SDK 并提示使用工作区版本：
+
+```json
+{
+  "js/ts.tsdk.path": "node_modules/typescript/lib",
+  "js/ts.tsdk.promptToUseWorkspaceVersion": true
+}
+```
+
 这样所有成员使用与项目依赖一致的 TypeScript 版本，避免 VS Code 内置版本与命令行
 检查结果不一致。
 
