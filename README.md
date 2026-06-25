@@ -368,6 +368,12 @@ pnpm g component --app react-web --scope app --name app-header
 docs/ci/gitlab-ci.md
 ```
 
+第一阶段完成后的分阶段集成计划见：
+
+```txt
+docs/roadmap/foundation-roadmap.md
+```
+
 ## 后续扩展建议
 
 新增业务应用时，优先放到：

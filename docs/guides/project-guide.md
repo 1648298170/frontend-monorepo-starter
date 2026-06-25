@@ -1085,6 +1085,7 @@ Vite 只会自动注入这个入口。
 | 主题           | 文档                                                                                 |
 | -------------- | ------------------------------------------------------------------------------------ |
 | 项目整体架构   | [`../../README.md`](../../README.md)                                                 |
+| 后续阶段路线图 | [`../roadmap/foundation-roadmap.md`](../roadmap/foundation-roadmap.md)               |
 | 应用目录职责   | [`../conventions/application-structure.md`](../conventions/application-structure.md) |
 | Package 边界   | [`../conventions/package-boundaries.md`](../conventions/package-boundaries.md)       |
 | 代码生成器     | [`../conventions/code-generation.md`](../conventions/code-generation.md)             |
