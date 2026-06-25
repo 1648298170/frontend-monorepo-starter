@@ -98,8 +98,19 @@ yarn
 code .
 ```
 
-首次打开时安装工作区推荐扩展，并保留仓库中的格式化、保存行为和 TypeScript 设置。
-详细说明见 [`../conventions/vscode.md`](../conventions/vscode.md)。
+首次打开时必须安装以下工作区扩展：
+
+- ESLint：`dbaeumer.vscode-eslint`
+- Prettier：`esbenp.prettier-vscode`
+- Stylelint：`stylelint.vscode-stylelint`
+- Vue - Official：`vue.volar`
+
+在扩展面板搜索 `@recommended` 并执行 **Install Workspace Recommended Extensions**，
+安装完成后重新加载 VS Code。React 和 TypeScript 使用 VS Code 内置语言服务，不需要
+额外安装 React 扩展。
+
+同时保留仓库提供的格式化、保存行为和 TypeScript 设置。详细说明见
+[`../conventions/vscode.md`](../conventions/vscode.md)。
 
 ## 2. 启动应用
 

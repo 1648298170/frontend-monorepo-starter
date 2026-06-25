@@ -5,15 +5,23 @@
 
 基础字符集、换行和缩进规则由仓库根目录 `.editorconfig` 提供，VS Code 会原生读取。
 
-## 推荐扩展
+## 开发者必装扩展
 
-首次打开仓库时，VS Code 会提示安装：
+所有使用 VS Code 开发本项目的同事都需要安装以下扩展。扩展清单由
+`.vscode/extensions.json` 统一维护：
 
-- ESLint：读取根目录 Flat Config，显示规则错误并支持保存修复。
-- Prettier：使用仓库中的 `prettier.config.js` 格式化代码。
-- Vue - Official：提供 Vue 3、SFC 和 TypeScript 语言支持。
+| 扩展           | 扩展 ID                      | 用途                                               |
+| -------------- | ---------------------------- | -------------------------------------------------- |
+| ESLint         | `dbaeumer.vscode-eslint`     | 读取 Flat Config，显示规则错误并支持保存自动修复   |
+| Prettier       | `esbenp.prettier-vscode`     | 使用仓库 `prettier.config.js` 统一格式化代码       |
+| Stylelint      | `stylelint.vscode-stylelint` | 检查并修复 CSS、SCSS、Sass 和 Vue SFC 中的样式代码 |
+| Vue - Official | `vue.volar`                  | 提供 Vue 3、Vue SFC 和 TypeScript 语言支持         |
 
 React 和 TypeScript 使用 VS Code 内置语言服务，不需要额外 React 扩展。
+
+首次打开仓库时，在 VS Code 推荐扩展提示中选择 **Install All**。如果未出现提示，
+打开扩展面板，搜索 `@recommended`，然后执行 **Install Workspace Recommended
+Extensions**。安装完成后执行 **Developer: Reload Window** 重新加载窗口。
 
 如果 `.vscode/settings.json` 中的 `stylelint.validate` 提示“未知的配置设置”，说明当前
 VS Code Profile 尚未安装或启用 `stylelint.vscode-stylelint`。打开扩展面板执行
