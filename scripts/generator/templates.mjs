@@ -1,3 +1,8 @@
+// 模板模块只负责返回文件文本，不读取或写入磁盘，便于规划阶段测试和 dry-run。
+// 以下模板按“普通组件、共享 UI、Feature、Page、Store、复用逻辑”分区维护。
+
+// ---------- 应用与业务组件模板 ----------
+
 // React 组件模板使用显式 Props 和语义化 section，方便直接扩展与测试。
 export function reactComponentTemplate({ pascalName }) {
   return `interface ${pascalName}Props {
@@ -75,6 +80,8 @@ describe("${pascalName}", () => {
 `;
 }
 
+// ---------- Workspace UI 组件模板 ----------
+
 export function reactUiComponentTemplate({ pascalName, kebabName }) {
   return `import type { ${pascalName}Props } from "./${kebabName}.types";
 
@@ -104,7 +111,8 @@ export function reactUiTypesTemplate({ pascalName }) {
 }
 
 export function reactUiStyleTemplate({ kebabName }) {
-  return `.repo-${kebabName} {
+  return `/* 当前文件只维护 ${kebabName} 组件自身样式，公共 Token 和基础表面样式由 UI 包统一提供。 */
+.repo-${kebabName} {
   padding: var(--repo-ui-space-4);
 }
 
@@ -145,26 +153,33 @@ export function vueUiTypesTemplate({ pascalName }) {
 `;
 }
 
+// 目录 index 只暴露组件公共入口，调用方不依赖组件内部文件结构。
 export function componentIndexTemplate({ framework, pascalName }) {
   if (framework === "react") {
-    return `export { ${pascalName} } from "./${pascalName}";
+    return `// 通过目录入口暴露组件，调用方不依赖组件内部文件结构。
+export { ${pascalName} } from "./${pascalName}";
 `;
   }
 
-  return `export { default as ${pascalName} } from "./${pascalName}.vue";
+  return `// 通过目录入口暴露组件，调用方不依赖组件内部文件结构。
+export { default as ${pascalName} } from "./${pascalName}.vue";
 `;
 }
 
+// UI 组件额外导出 Props 类型，支持 package.json 子路径稳定引用。
 export function uiComponentIndexTemplate({ framework, pascalName, kebabName }) {
   const componentExport =
     framework === "react"
       ? `export { ${pascalName} } from "./${pascalName}";`
       : `export { default as ${pascalName} } from "./${pascalName}.vue";`;
 
-  return `${componentExport}
+  return `// UI 组件入口同时暴露实现和 Props 类型，形成稳定的 package 子路径 API。
+${componentExport}
 export type { ${pascalName}Props } from "./${kebabName}.types";
 `;
 }
+
+// ---------- Feature 模板 ----------
 
 export function reactFeatureTemplate({ pascalName, displayName }) {
   return `// ${pascalName} 是 ${displayName} 业务能力的组合入口。
@@ -197,6 +212,7 @@ import { describe, expect, it } from "vitest";
 
 import { ${pascalName} } from "./${pascalName}";
 
+// Feature 测试验证业务入口最基本的用户可见行为，复杂流程按场景继续扩展。
 describe("${pascalName}", () => {
   it("renders the feature heading", () => {
     render(<${pascalName} />);
@@ -215,6 +231,7 @@ import { describe, expect, it } from "vitest";
 
 import ${pascalName} from "./${pascalName}.vue";
 
+// Feature 测试验证业务入口最基本的用户可见行为，复杂流程按场景继续扩展。
 describe("${pascalName}", () => {
   it("renders the feature heading", () => {
     render(${pascalName});
@@ -226,6 +243,8 @@ describe("${pascalName}", () => {
 });
 `;
 }
+
+// ---------- Page 模板 ----------
 
 export function reactPageTemplate({ pageName, displayName }) {
   return `// ${pageName} 只负责页面级组合，复用逻辑应下沉到 Feature 或 Hook。
@@ -258,6 +277,7 @@ import { describe, expect, it } from "vitest";
 
 import { ${pageName} } from "./${pageName}";
 
+// Page 测试保护页面级组合入口，不在这里重复测试子组件内部实现。
 describe("${pageName}", () => {
   it("renders the page heading", () => {
     render(<${pageName} />);
@@ -276,6 +296,7 @@ import { describe, expect, it } from "vitest";
 
 import ${pageName} from "./${pageName}.vue";
 
+// Page 测试保护页面级组合入口，不在这里重复测试子组件内部实现。
 describe("${pageName}", () => {
   it("renders the page heading", () => {
     render(${pageName});
@@ -287,6 +308,8 @@ describe("${pageName}", () => {
 });
 `;
 }
+
+// ---------- Store 模板 ----------
 
 export function reactStoreTemplate({ pascalName, useStoreName }) {
   return `import { create } from "zustand";
@@ -311,6 +334,7 @@ export function reactStoreTestTemplate({ kebabName, useStoreName }) {
 
 import { ${useStoreName} } from "./${kebabName}.store";
 
+// Store 测试直接调用公开 Action，验证状态变化而不依赖组件渲染。
 describe("${useStoreName}", () => {
   beforeEach(() => {
     ${useStoreName}.setState({ initialized: false });
@@ -353,6 +377,7 @@ import { beforeEach, describe, expect, it } from "vitest";
 
 import { ${useStoreName} } from "./${kebabName}.store";
 
+// 每个用例创建独立 Pinia，避免模块级状态在测试之间相互污染。
 describe("${useStoreName}", () => {
   beforeEach(() => {
     setActivePinia(createPinia());
@@ -369,6 +394,8 @@ describe("${useStoreName}", () => {
 `;
 }
 
+// ---------- Hook 与 Composable 模板 ----------
+
 export function reactHookTemplate({ useName }) {
   return `// ${useName} 封装可复用的 React 逻辑，后续在此补充状态和副作用。
 export function ${useName}() {
@@ -383,6 +410,7 @@ import { describe, expect, it } from "vitest";
 
 import { ${useName} } from "./${useName}";
 
+// Hook 测试通过 renderHook 观察公开返回值，不耦合内部实现。
 describe("${useName}", () => {
   it("returns its public API", () => {
     const { result } = renderHook(() => ${useName}());
@@ -406,6 +434,7 @@ export function vueComposableTestTemplate({ useName }) {
 
 import { ${useName} } from "./${useName}";
 
+// 无组件依赖的 Composable 可以直接调用并验证公开返回值。
 describe("${useName}", () => {
   it("returns its public API", () => {
     expect(${useName}()).toEqual({});

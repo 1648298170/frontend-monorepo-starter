@@ -206,6 +206,9 @@ React Router、Vue Router、Zustand 和 Pinia 的分层及扩展规范见
 源码、样式和 Workspace 包的命名规范及后续阶段计划见
 [`docs/conventions/naming.md`](docs/conventions/naming.md)。
 
+模块职责、关键流程、特殊边界和测试代码的注释要求见
+[`docs/conventions/code-comments.md`](docs/conventions/code-comments.md)。
+
 单元测试、React/Vue 组件测试和覆盖率规范见
 [`docs/conventions/testing.md`](docs/conventions/testing.md)。
 

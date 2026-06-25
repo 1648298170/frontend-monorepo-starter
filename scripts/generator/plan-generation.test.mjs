@@ -9,20 +9,24 @@ import { toPascalCase, toSuffixedPascalCase } from "./names.mjs";
 import { planGeneration } from "./plan-generation.mjs";
 import { applyChanges, validateChanges } from "./transaction.mjs";
 
+// 每个用例使用独立临时工作区，确保测试不会修改真实仓库。
 const temporaryDirectories = [];
 
+// 创建临时工作区并登记清理路径，供规划和事务测试复用。
 async function createWorkspace() {
   const workspaceRoot = await mkdtemp(join(tmpdir(), "repo-generator-"));
   temporaryDirectories.push(workspaceRoot);
   return workspaceRoot;
 }
 
+// 写入最小夹具文件，用于模拟已存在的 barrel、package.json 或目录阻塞。
 async function writeWorkspaceFile(workspaceRoot, path, content = "") {
   const absolutePath = join(workspaceRoot, path);
   await mkdir(join(absolutePath, ".."), { recursive: true });
   await writeFile(absolutePath, content, "utf8");
 }
 
+// 无论测试成功或失败，都删除本轮创建的临时工作区。
 afterEach(async () => {
   await Promise.all(
     temporaryDirectories
@@ -31,6 +35,7 @@ afterEach(async () => {
   );
 });
 
+// 规划测试关注生成路径、导出更新和父目录约束，不直接写入真实项目。
 describe("planGeneration", () => {
   it("plans an application component and its barrel export", async () => {
     const workspaceRoot = await createWorkspace();
@@ -245,6 +250,7 @@ describe("planGeneration", () => {
   });
 });
 
+// 参数与名称测试保护 CLI 的输入边界，避免错误输入生成不可编译文件。
 describe("generator arguments and names", () => {
   it("rejects unknown command options", () => {
     expect(() =>

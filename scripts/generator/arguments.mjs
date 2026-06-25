@@ -1,4 +1,6 @@
+// 布尔参数不消费后续 token，其余受支持参数必须显式提供字符串值。
 const booleanOptions = new Set(["dry-run", "skip-test", "help"]);
+// 参数白名单用于尽早发现拼写错误，避免未知选项被静默忽略。
 const supportedOptions = new Set([
   ...booleanOptions,
   "app",
@@ -11,6 +13,7 @@ const supportedOptions = new Set([
 
 // 解析 --key value、--key=value 和布尔开关，不引入额外 CLI 依赖。
 export function parseArguments(argv) {
+  // 第一个位置参数表示生成类型，剩余 token 统一按长参数解析。
   const [type, ...tokens] = argv;
   const options = {};
 
@@ -31,6 +34,7 @@ export function parseArguments(argv) {
     }
 
     if (booleanOptions.has(key)) {
+      // 布尔参数支持 --dry-run 和 --dry-run=false 两种形式。
       options[key] =
         separatorIndex === -1
           ? true

@@ -1,3 +1,4 @@
+// 本模块是生成器唯一的命名转换入口，避免不同生成类型各自实现一套规则。
 // 将 kebab-case、snake_case、空格和 camelCase 统一拆成单词数组。
 function splitWords(value) {
   const words = String(value)
@@ -12,6 +13,7 @@ function splitWords(value) {
   }
 
   if (!/^[a-z]/.test(words[0])) {
+    // 生成的组件、类型和函数都需要成为合法的 JavaScript 标识符。
     throw new Error("名称必须以字母开头。");
   }
 

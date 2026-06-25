@@ -39,11 +39,13 @@ import {
   toUseName,
 } from "./names.mjs";
 
+// 应用名称同时决定模板框架，调用方不需要重复传入 framework。
 const appFrameworks = {
   "react-web": "react",
   "vue-web": "vue",
 };
 
+// 第一阶段只开放这些稳定生成类型，新增类型需要同步扩展帮助、文档和测试。
 const supportedTypes = new Set([
   "component",
   "feature",
@@ -63,6 +65,7 @@ function createChange(workspaceRoot, path, kind, content) {
   };
 }
 
+// 必填参数集中校验，确保各规划函数返回的计划始终完整可执行。
 function requireOption(options, name) {
   const value = options[name];
 
@@ -73,6 +76,7 @@ function requireOption(options, name) {
   return value;
 }
 
+// 将应用名解析为框架，并在规划文件之前阻止未知应用。
 function resolveApp(options) {
   const app = requireOption(options, "app");
   const framework = appFrameworks[app];
@@ -84,6 +88,7 @@ function resolveApp(options) {
   return { app, framework };
 }
 
+// 仅判断路径是否存在；具体业务错误由调用方补充可理解的上下文。
 async function pathExists(path) {
   try {
     await access(path);
@@ -93,6 +98,7 @@ async function pathExists(path) {
   }
 }
 
+// Feature/Page 子作用域不允许隐式创建父业务模块，防止输错名称后生成孤立目录。
 async function requireDirectory(path, label) {
   if (!(await pathExists(path))) {
     throw new Error(`${label}不存在：${path}`);
@@ -111,10 +117,16 @@ async function planBarrelExport(workspaceRoot, path, exportLine) {
     );
   }
 
-  return createChange(workspaceRoot, path, "create", `${exportLine}\n`);
+  return createChange(
+    workspaceRoot,
+    path,
+    "create",
+    `// 通过目录入口集中暴露公共能力，避免调用方依赖内部文件路径。\n${exportLine}\n`
+  );
 }
 
 function getScopedDirectory({ workspaceRoot, app, scope, options, leafName }) {
+  // app、feature、page 三种作用域共享同一套路径计算规则。
   const sourceRoot = join(workspaceRoot, "apps", app, "src");
 
   if (scope === "app") {
@@ -134,6 +146,7 @@ function getScopedDirectory({ workspaceRoot, app, scope, options, leafName }) {
   throw new Error(`作用域 ${scope} 不支持该生成类型。`);
 }
 
+// 对 Feature/Page 作用域执行父目录检查；app 作用域允许首次创建目标目录。
 async function requireScopedParent({ workspaceRoot, app, scope, options }) {
   if (scope === "feature") {
     const feature = toKebabCase(requireOption(options, "feature"));
@@ -152,6 +165,7 @@ async function requireScopedParent({ workspaceRoot, app, scope, options }) {
   }
 }
 
+// 组件规划同时覆盖应用组件、Feature/Page 私有组件和 Workspace UI 组件。
 async function planComponent(workspaceRoot, options) {
   const scope = options.scope ?? "app";
   const name = requireOption(options, "name");
@@ -159,6 +173,7 @@ async function planComponent(workspaceRoot, options) {
   const pascalName = toPascalCase(name);
 
   if (scope === "ui") {
+    // UI 组件属于框架包，需要额外维护组件入口和 package exports。
     const framework = requireOption(options, "framework");
 
     if (!["react", "vue"].includes(framework)) {
@@ -201,6 +216,7 @@ async function planComponent(workspaceRoot, options) {
     ];
 
     if (!options["skip-test"]) {
+      // 默认生成测试，只有调用方明确指定 --skip-test 时才省略。
       changes.push(
         createChange(
           workspaceRoot,
@@ -245,6 +261,7 @@ async function planComponent(workspaceRoot, options) {
   }
 
   const { app, framework } = resolveApp(options);
+  // 应用内组件按作用域生成局部 barrel，不修改应用全局路由或业务入口。
   await requireScopedParent({ workspaceRoot, app, scope, options });
   const componentsRoot = getScopedDirectory({
     workspaceRoot,
@@ -302,6 +319,7 @@ async function planComponent(workspaceRoot, options) {
   return { changes, messages: [] };
 }
 
+// Feature 是独立业务能力入口，首版只创建可运行组件、测试和稳定导出。
 async function planFeature(workspaceRoot, options) {
   const { app, framework } = resolveApp(options);
   const name = requireOption(options, "name");
@@ -356,6 +374,7 @@ async function planFeature(workspaceRoot, options) {
   return { changes, messages: [] };
 }
 
+// Page 只负责页面骨架；路由、权限和布局包含业务语义，因此保持手动注册。
 async function planPage(workspaceRoot, options) {
   const { app, framework } = resolveApp(options);
   const name = requireOption(options, "name");
@@ -410,11 +429,13 @@ async function planPage(workspaceRoot, options) {
   };
 }
 
+// Store 根据应用框架生成 Zustand 或 Pinia 实现，并追加到应用 Store 入口。
 async function planStore(workspaceRoot, options) {
   const { app, framework } = resolveApp(options);
   const name = requireOption(options, "name");
   const kebabName = toKebabCase(name);
   const storeName = toSuffixedPascalCase(name, "Store");
+  // React 状态接口去掉 Store 后缀，生成 UserState 而不是 UserStoreState。
   const stateName = storeName.slice(0, -"Store".length);
   const useStoreName = `use${storeName}`;
   const storeRoot = join(workspaceRoot, "apps", app, "src", "app", "store");
@@ -453,6 +474,7 @@ async function planStore(workspaceRoot, options) {
   return { changes, messages: [] };
 }
 
+// Hook 与 Composable 共用作用域和 barrel 逻辑，但严格限制到对应框架。
 async function planReusableLogic(workspaceRoot, options, type) {
   const { app, framework } = resolveApp(options);
 

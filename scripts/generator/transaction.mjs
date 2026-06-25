@@ -1,6 +1,7 @@
 import { mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import { dirname } from "node:path";
 
+// 事务层不理解具体生成类型，只处理 create/update 两类文件变更。
 // 校验创建文件不存在、更新文件存在，所有检查通过后才开始写入。
 export async function validateChanges(changes) {
   const targetPaths = new Set();
@@ -32,6 +33,7 @@ export async function validateChanges(changes) {
 
 // 按计划写入全部文件，任一步失败时恢复更新文件并删除本次新文件。
 export async function applyChanges(changes) {
+  // update 保存原内容用于恢复；create 只记录已经成功创建的文件。
   const backups = new Map();
   const createdFiles = [];
 
