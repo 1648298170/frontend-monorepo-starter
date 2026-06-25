@@ -2,6 +2,10 @@
 
 这是一个面向业务项目的前端 monorepo 模板。它不是单纯把多个项目塞进一个仓库，而是希望把“应用代码、共享能力、框架适配、工程配置”分清楚，让项目在后续新增应用、多人协作、沉淀公共能力时仍然容易维护。
 
+第一次接触本仓库，请先阅读
+[`docs/guides/getting-started.md`](docs/guides/getting-started.md)。该指南按真实开发顺序
+讲解环境安装、应用启动、目录分层、代码生成、状态、请求、样式、测试和提交前检查。
+
 ## 设计目标
 
 这个模板主要服务三件事：
@@ -86,6 +90,7 @@ frontend-monorepo-starter/
   docs/
     architecture/            # 架构说明
     conventions/             # 协作约定
+    guides/                  # 新同事教学与上手指南
     ci/                      # CI 预留设计
 
   package.json
