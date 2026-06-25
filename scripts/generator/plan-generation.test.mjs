@@ -16,6 +16,35 @@ const temporaryDirectories = [];
 async function createWorkspace() {
   const workspaceRoot = await mkdtemp(join(tmpdir(), "repo-generator-"));
   temporaryDirectories.push(workspaceRoot);
+  // 生成器通过应用依赖识别框架，测试夹具也使用与真实应用一致的最小 package 声明。
+  await writeWorkspaceFile(
+    workspaceRoot,
+    "apps/react-web/package.json",
+    `${JSON.stringify(
+      {
+        name: "@apps/react-web",
+        dependencies: {
+          react: "catalog:",
+        },
+      },
+      null,
+      2
+    )}\n`
+  );
+  await writeWorkspaceFile(
+    workspaceRoot,
+    "apps/vue-web/package.json",
+    `${JSON.stringify(
+      {
+        name: "@apps/vue-web",
+        dependencies: {
+          vue: "catalog:",
+        },
+      },
+      null,
+      2
+    )}\n`
+  );
   return workspaceRoot;
 }
 
@@ -200,6 +229,63 @@ describe("planGeneration", () => {
       )
     ).toContain("export function usePagination");
     await expect(validateChanges(result.changes)).rejects.toThrow("拒绝覆盖");
+  });
+
+  it("rejects applications whose framework cannot be identified", async () => {
+    const workspaceRoot = await createWorkspace();
+    await writeWorkspaceFile(
+      workspaceRoot,
+      "apps/unknown-web/package.json",
+      `${JSON.stringify(
+        {
+          name: "@apps/unknown-web",
+          dependencies: {},
+        },
+        null,
+        2
+      )}\n`
+    );
+
+    await expect(
+      planGeneration({
+        workspaceRoot,
+        type: "component",
+        options: {
+          app: "unknown-web",
+          name: "example-card",
+        },
+      })
+    ).rejects.toThrow("无法从应用 unknown-web 的依赖中识别 React 或 Vue 框架");
+  });
+
+  it("rejects applications that directly declare both frameworks", async () => {
+    const workspaceRoot = await createWorkspace();
+    await writeWorkspaceFile(
+      workspaceRoot,
+      "apps/ambiguous-web/package.json",
+      `${JSON.stringify(
+        {
+          name: "@apps/ambiguous-web",
+          dependencies: {
+            react: "catalog:",
+            vue: "catalog:",
+          },
+        },
+        null,
+        2
+      )}\n`
+    );
+
+    await expect(
+      planGeneration({
+        workspaceRoot,
+        type: "component",
+        options: {
+          app: "ambiguous-web",
+          name: "example-card",
+        },
+      })
+    ).rejects.toThrow("同时声明了 React 和 Vue");
   });
 
   it("rolls back files created before a write failure", async () => {

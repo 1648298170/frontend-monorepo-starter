@@ -5,7 +5,12 @@ const semverPattern =
 export function parseSemver(version) {
   const match = String(version).match(semverPattern);
 
-  if (!match) {
+  // SemVer 规定纯数字预发布标识不能包含前导零，例如 01 非法而 0 合法。
+  const hasInvalidNumericPrerelease = match?.[4]
+    ?.split(".")
+    .some((identifier) => /^\d+$/.test(identifier) && /^0\d+/.test(identifier));
+
+  if (!match || hasInvalidNumericPrerelease) {
     throw new Error(`版本 ${version} 不是有效的 SemVer，例如应使用 1.2.3。`);
   }
 
@@ -18,18 +23,19 @@ export function parseSemver(version) {
 
 // major/minor/patch 升级会清除预发布与构建元数据，返回稳定发布版本。
 export function bumpSemver(version, bump) {
-  const parsed = parseSemver(version);
+  parseSemver(version);
+  const [, major, minor, patch] = String(version).match(semverPattern);
 
   if (bump === "major") {
-    return `${parsed.major + 1}.0.0`;
+    return `${BigInt(major) + 1n}.0.0`;
   }
 
   if (bump === "minor") {
-    return `${parsed.major}.${parsed.minor + 1}.0`;
+    return `${major}.${BigInt(minor) + 1n}.0`;
   }
 
   if (bump === "patch") {
-    return `${parsed.major}.${parsed.minor}.${parsed.patch + 1}`;
+    return `${major}.${minor}.${BigInt(patch) + 1n}`;
   }
 
   throw new Error("--bump 仅支持 major、minor 或 patch。");

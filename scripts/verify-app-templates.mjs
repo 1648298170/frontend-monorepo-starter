@@ -83,6 +83,18 @@ async function main() {
 
       // 版本命令使用 dry-run 验证模板脚本和应用目录自动识别，不修改临时应用版本。
       runPnpm(["--filter", packageName, "version:patch", "--dry-run"]);
+      // 再次调用代码生成器，确认任意应用名可通过 package.json 依赖识别目标框架。
+      runPnpm([
+        "g",
+        "component",
+        "--app",
+        app.name,
+        "--scope",
+        "app",
+        "--name",
+        "verification-card",
+        "--dry-run",
+      ]);
     }
 
     console.log("React 与 Vue 应用模板完整性验证通过。");

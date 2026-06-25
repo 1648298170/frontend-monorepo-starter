@@ -18,4 +18,23 @@ describe("application SemVer", () => {
     });
     expect(() => parseSemver("1.2")).toThrow("不是有效的 SemVer");
   });
+
+  it("rejects numeric prerelease identifiers with leading zeroes", () => {
+    expect(() => parseSemver("1.0.0-01")).toThrow("不是有效的 SemVer");
+    expect(() => parseSemver("1.0.0-alpha.01")).toThrow("不是有效的 SemVer");
+    expect(parseSemver("1.0.0-0")).toMatchObject({
+      major: 1,
+      minor: 0,
+      patch: 0,
+    });
+  });
+
+  it("bumps integers larger than the JavaScript safe integer range", () => {
+    expect(bumpSemver("9007199254740993.0.0", "major")).toBe(
+      "9007199254740994.0.0"
+    );
+    expect(bumpSemver("1.0.9007199254740993", "patch")).toBe(
+      "1.0.9007199254740994"
+    );
+  });
 });

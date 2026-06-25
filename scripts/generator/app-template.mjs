@@ -52,7 +52,12 @@ pnpm --filter @apps/${appName} lint
 pnpm --filter @apps/${appName} typecheck
 pnpm --filter @apps/${appName} test
 pnpm --filter @apps/${appName} build
+pnpm --filter @apps/${appName} version:patch
 \`\`\`
+
+也可以进入应用目录运行 \`pnpm version:minor\`、\`pnpm version:major\` 或
+\`pnpm version:set 1.2.0\`。版本命令只修改当前应用的 \`package.json\`，不会创建 Git
+提交或 Tag。
 
 默认开发地址为 \`http://localhost:${port}\`。端口和公共环境变量位于 \`.env\`，本机
 覆盖请写入不提交 Git 的 \`.env.local\`。

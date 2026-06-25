@@ -180,4 +180,32 @@ describe("app generation", () => {
     expect(paths).toContain("apps/minimal-tests-web/vitest.config.ts");
     expect(paths).toContain("apps/minimal-tests-web/src/test/setup.ts");
   });
+
+  it("allows later generation inside an application with an arbitrary name", async () => {
+    const workspaceRoot = await createWorkspace();
+    const appResult = await planGeneration({
+      workspaceRoot,
+      type: "app",
+      options: {
+        name: "admin-web",
+        framework: "react",
+      },
+    });
+
+    await validateChanges(appResult.changes);
+    await applyChanges(appResult.changes);
+
+    const componentResult = await planGeneration({
+      workspaceRoot,
+      type: "component",
+      options: {
+        app: "admin-web",
+        name: "user-card",
+      },
+    });
+
+    expect(
+      componentResult.changes.map(({ relativePath }) => relativePath)
+    ).toContain("apps/admin-web/src/components/user-card/UserCard.tsx");
+  });
 });

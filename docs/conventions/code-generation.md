@@ -103,6 +103,9 @@ pnpm build:app admin-web
 pnpm test:app admin-web
 ```
 
+生成器会读取目标应用 `package.json` 的直接依赖识别 React 或 Vue，因此 `admin-web`
+等自定义名称应用也可以继续生成 component、feature、page、store、hook 或 composable。
+
 ### 更新应用版本
 
 每个应用的 `package.json` 都提供版本升级脚本。在应用目录中可以直接执行：

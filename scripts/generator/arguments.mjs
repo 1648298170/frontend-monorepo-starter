@@ -83,7 +83,7 @@ Types:
   composable   生成 Vue Composable
 
 Common options:
-  --app react-web|vue-web
+  --app <apps 目录下的应用名>
   --framework react|vue
   --scope app|feature|page|ui
   --name <name>

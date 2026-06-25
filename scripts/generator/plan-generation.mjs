@@ -41,12 +41,6 @@ import {
   toUseName,
 } from "./names.mjs";
 
-// 应用名称同时决定模板框架，调用方不需要重复传入 framework。
-const appFrameworks = {
-  "react-web": "react",
-  "vue-web": "vue",
-};
-
 // 第一阶段只开放这些稳定生成类型，新增类型需要同步扩展帮助、文档和测试。
 const supportedTypes = new Set([
   "app",
@@ -81,13 +75,47 @@ function requireOption(options, name) {
   return value;
 }
 
-// 将应用名解析为框架，并在规划文件之前阻止未知应用。
-function resolveApp(options) {
+// 从目标应用 package.json 识别框架，使新生成的任意名称应用都能继续使用代码生成器。
+async function resolveApp(workspaceRoot, options) {
   const app = requireOption(options, "app");
-  const framework = appFrameworks[app];
+  const packageJsonPath = join(workspaceRoot, "apps", app, "package.json");
+  let packageJson;
+
+  try {
+    packageJson = JSON.parse(await readFile(packageJsonPath, "utf8"));
+  } catch {
+    throw new Error(`应用 ${app} 不存在或缺少有效的 package.json。`);
+  }
+
+  const expectedPackageName = `@apps/${app}`;
+
+  if (packageJson.name !== expectedPackageName) {
+    throw new Error(
+      `应用 ${app} 的包名应为 ${expectedPackageName}，实际为 ${packageJson.name ?? "(空)"}。`
+    );
+  }
+
+  const dependencies = {
+    ...packageJson.dependencies,
+    ...packageJson.devDependencies,
+  };
+  const hasReact = Boolean(dependencies.react);
+  const hasVue = Boolean(dependencies.vue);
+
+  if (hasReact && hasVue) {
+    throw new Error(
+      `应用 ${app} 同时声明了 React 和 Vue，无法安全识别代码生成目标框架。`
+    );
+  }
+
+  const framework = dependencies.react
+    ? "react"
+    : dependencies.vue
+      ? "vue"
+      : undefined;
 
   if (!framework) {
-    throw new Error(`不支持应用 ${app}，当前仅支持 react-web 和 vue-web。`);
+    throw new Error(`无法从应用 ${app} 的依赖中识别 React 或 Vue 框架。`);
   }
 
   return { app, framework };
@@ -387,7 +415,7 @@ async function planComponent(workspaceRoot, options) {
     return { changes, messages: [] };
   }
 
-  const { app, framework } = resolveApp(options);
+  const { app, framework } = await resolveApp(workspaceRoot, options);
   // 应用内组件按作用域生成局部 barrel，不修改应用全局路由或业务入口。
   await requireScopedParent({ workspaceRoot, app, scope, options });
   const componentsRoot = getScopedDirectory({
@@ -448,7 +476,7 @@ async function planComponent(workspaceRoot, options) {
 
 // Feature 是独立业务能力入口，首版只创建可运行组件、测试和稳定导出。
 async function planFeature(workspaceRoot, options) {
-  const { app, framework } = resolveApp(options);
+  const { app, framework } = await resolveApp(workspaceRoot, options);
   const name = requireOption(options, "name");
   const kebabName = toKebabCase(name);
   const pascalName = toPascalCase(name);
@@ -503,7 +531,7 @@ async function planFeature(workspaceRoot, options) {
 
 // Page 只负责页面骨架；路由、权限和布局包含业务语义，因此保持手动注册。
 async function planPage(workspaceRoot, options) {
-  const { app, framework } = resolveApp(options);
+  const { app, framework } = await resolveApp(workspaceRoot, options);
   const name = requireOption(options, "name");
   const kebabName = toKebabCase(name);
   const pageName = toSuffixedPascalCase(name, "Page");
@@ -558,7 +586,7 @@ async function planPage(workspaceRoot, options) {
 
 // Store 根据应用框架生成 Zustand 或 Pinia 实现，并追加到应用 Store 入口。
 async function planStore(workspaceRoot, options) {
-  const { app, framework } = resolveApp(options);
+  const { app, framework } = await resolveApp(workspaceRoot, options);
   const name = requireOption(options, "name");
   const kebabName = toKebabCase(name);
   const storeName = toSuffixedPascalCase(name, "Store");
@@ -603,7 +631,7 @@ async function planStore(workspaceRoot, options) {
 
 // Hook 与 Composable 共用作用域和 barrel 逻辑，但严格限制到对应框架。
 async function planReusableLogic(workspaceRoot, options, type) {
-  const { app, framework } = resolveApp(options);
+  const { app, framework } = await resolveApp(workspaceRoot, options);
 
   if (type === "hook" && framework !== "react") {
     throw new Error("hook 只能生成到 React 应用。");
@@ -664,7 +692,7 @@ async function planReusableLogic(workspaceRoot, options, type) {
 export async function planGeneration({ workspaceRoot, type, options = {} }) {
   if (!supportedTypes.has(type)) {
     throw new Error(
-      `不支持生成类型 ${type ?? "(空)"}，请使用 component、feature、page、store、hook 或 composable。`
+      `不支持生成类型 ${type ?? "(空)"}，请使用 app、component、feature、page、store、hook 或 composable。`
     );
   }
 

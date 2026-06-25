@@ -265,6 +265,13 @@ pnpm dev:app admin-web
 端口未提供时会自动选择首个未占用端口。完整参数和版本管理命令见
 [`../conventions/code-generation.md`](../conventions/code-generation.md)。
 
+新应用创建后不受名称限制。代码生成器会根据该应用 `package.json` 中直接声明的
+React 或 Vue 依赖识别框架，例如可以继续执行：
+
+```bash
+pnpm g component --app admin-web --scope app --name app-header
+```
+
 ### 5.1 生成 Feature
 
 React：
