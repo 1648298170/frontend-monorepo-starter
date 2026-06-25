@@ -812,10 +812,51 @@ chore: 调整工具链或工程配置
 - 多个 Workspace 需要统一版本：版本加入 catalog，各使用方仍分别声明。
 - ESLint、Prettier、Turbo 等仓库工具：声明在根目录或 tooling 包。
 
+推荐在仓库根目录使用 `--filter` 指定依赖归属。这样无需频繁切换目录，也不会把业务
+依赖误写入根 `package.json`：
+
+```bash
+# 为 React 应用安装运行时依赖。
+pnpm --filter @apps/react-web add axios
+
+# 为 Vue 应用安装开发依赖。
+pnpm --filter @apps/vue-web add -D unplugin-auto-import
+
+# 为指定共享包安装依赖。
+pnpm --filter @repo/request add ofetch
+```
+
+也可以进入目标 Workspace 目录执行命令，效果相同：
+
+```bash
+cd apps/react-web
+pnpm add axios
+```
+
+以上命令只会修改目标 Workspace 的 `package.json`，但整个 Monorepo 仍共同维护根目录的
+`pnpm-lock.yaml` 和 pnpm 虚拟存储，这是正常的 Workspace 行为。
+
+只有全仓库共同使用的工程工具才安装到根目录，`-w` 表示明确修改 Workspace Root：
+
+```bash
+pnpm add -Dw <工程工具包名>
+```
+
+如果依赖版本已经由 `pnpm-workspace.yaml` 的 catalog 管理，使用方仍要在自己的
+`package.json` 中声明，安装时使用 `catalog:`：
+
+```bash
+pnpm --filter @apps/react-web add react@catalog:
+pnpm --filter @apps/vue-web add vue@catalog:
+```
+
+准备让多个 Workspace 共用的新依赖，应先在 `pnpm-workspace.yaml` 的 `catalog` 中登记
+版本，再分别为实际使用它的应用或 Package 添加 `catalog:` 声明。不要因为版本由 catalog
+统一，就把业务依赖安装到根目录。
+
 完成后执行：
 
 ```bash
-pnpm install
 pnpm lint:unused
 pnpm typecheck
 pnpm test
