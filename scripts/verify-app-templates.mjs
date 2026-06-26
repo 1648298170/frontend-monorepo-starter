@@ -1,4 +1,4 @@
-import { rm } from "node:fs/promises";
+import { readFile, rm, writeFile } from "node:fs/promises";
 import { spawnSync } from "node:child_process";
 import { join, resolve } from "node:path";
 
@@ -6,6 +6,7 @@ import { planGeneration } from "./generator/plan-generation.mjs";
 import { applyChanges, validateChanges } from "./generator/transaction.mjs";
 
 const workspaceRoot = resolve(import.meta.dirname, "..");
+const lockfilePath = join(workspaceRoot, "pnpm-lock.yaml");
 const verificationApps = [
   {
     name: "template-react-verification",
@@ -18,6 +19,16 @@ const verificationApps = [
     port: "6292",
   },
 ];
+
+// 模板校验会短暂创建临时应用并执行 pnpm install，先保存锁文件原文，避免结束后留下格式化或临时 Workspace 噪声。
+async function readLockfileSnapshot() {
+  return readFile(lockfilePath, "utf8");
+}
+
+// 无论 pnpm 在校验过程中如何重写锁文件，脚本结束时都恢复进入脚本前的真实仓库状态。
+async function restoreLockfileSnapshot(snapshot) {
+  await writeFile(lockfilePath, snapshot, "utf8");
+}
 
 // 统一运行 pnpm 子进程并继承输出，任何步骤失败都会中止验证并进入清理流程。
 function runPnpm(args) {
@@ -52,6 +63,8 @@ async function cleanupVerificationApps() {
 }
 
 async function main() {
+  const lockfileSnapshot = await readLockfileSnapshot();
+
   await cleanupVerificationApps();
 
   try {
@@ -102,6 +115,7 @@ async function main() {
     await cleanupVerificationApps();
     // 清理临时 Workspace 后重新安装，使 pnpm-lock.yaml 回到真实应用集合。
     runPnpm(["install", "--offline"]);
+    await restoreLockfileSnapshot(lockfileSnapshot);
   }
 }
 
