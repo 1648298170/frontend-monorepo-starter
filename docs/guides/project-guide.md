@@ -902,6 +902,15 @@ pnpm --filter @apps/vue-web add vue@catalog:
 版本，再分别为实际使用它的应用或 Package 添加 `catalog:` 声明。不要因为版本由 catalog
 统一，就把业务依赖安装到根目录。
 
+当前业务应用已经预置并由 catalog 统一版本：
+
+- React 应用：`ahooks`、`lodash`。
+- Vue 应用：`@vueuse/core`、`lodash`。
+- TypeScript 类型：使用 `lodash` 的 Workspace 同时声明 `@types/lodash`。
+
+业务代码使用 `lodash` 时优先按方法路径导入，例如 `lodash/startCase`，避免因为整包导入扩大
+构建产物体积。
+
 完成后执行：
 
 ```bash

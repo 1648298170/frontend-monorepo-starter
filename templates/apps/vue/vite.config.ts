@@ -89,6 +89,11 @@ export default defineConfig(({ mode }) => {
       sourcemap: parseBoolean(env.BUILD_SOURCEMAP) ? "hidden" : false,
       // 使用 Vite 8 的 Rolldown 原生配置入口。
       rolldownOptions: {
+        // VueUse 当前产物中存在 Rolldown 无法解释位置的 PURE 注释；关闭该第三方告警，避免构建日志噪声。
+        checks: {
+          // 仅关闭无效 PURE 注释告警，不影响语法、类型、Lint 和业务源码检查。
+          invalidAnnotation: false,
+        },
         // 配置 Rolldown 的产物输出策略。
         output: {
           // 将稳定的 Vue 运行时依赖拆成独立 chunk，提升长期缓存命中率。

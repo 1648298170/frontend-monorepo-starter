@@ -1,7 +1,10 @@
+import { useMemoizedFn } from "ahooks";
+import startCase from "lodash/startCase";
+
 import { MetricCard } from "@repo/react-ui";
 import { formatDate, formatPercent } from "@repo/utils";
 
-// 导入应用级运行时配置 Hook。
+// 导入应用级运行时配置 Hook，示例业务组件只读取已经装配好的稳定配置。
 import { useRuntimeConfig } from "@/hooks/useRuntimeConfig";
 
 const metrics = [
@@ -24,6 +27,8 @@ const metrics = [
 
 export function TemplateOverview() {
   const { config } = useRuntimeConfig();
+  // ahooks 适合沉淀 React 业务 Hook 能力；这里用稳定函数包装 lodash 文案格式化示例。
+  const formatMetricLabel = useMemoizedFn((label: string) => startCase(label));
 
   return (
     <main className="mx-auto grid w-[min(1040px,calc(100%_-_32px))] gap-7 py-16">
@@ -47,7 +52,7 @@ export function TemplateOverview() {
         {metrics.map((metric) => (
           <MetricCard
             key={metric.label}
-            label={metric.label}
+            label={formatMetricLabel(metric.label)}
             value={metric.value}
             tone={metric.tone}
           />

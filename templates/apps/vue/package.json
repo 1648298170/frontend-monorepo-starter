@@ -34,6 +34,8 @@
     "@repo/request": "workspace:*",
     "@repo/utils": "workspace:*",
     "@repo/vue-ui": "workspace:*",
+    "@vueuse/core": "catalog:",
+    "lodash": "catalog:",
     "pinia": "catalog:",
     "vue": "catalog:",
     "vue-router": "catalog:"
@@ -45,6 +47,7 @@
     "@tailwindcss/vite": "catalog:",
     "@testing-library/jest-dom": "catalog:",
     "@testing-library/vue": "catalog:",
+    "@types/lodash": "catalog:",
     "@vitejs/plugin-vue": "catalog:",
     "cross-env": "catalog:",
     "happy-dom": "catalog:",

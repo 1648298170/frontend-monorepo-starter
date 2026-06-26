@@ -24,6 +24,9 @@ catalogs:
     "@testing-library/vue":
       specifier: ^8.1.0
       version: 8.1.0
+    "@types/lodash":
+      specifier: ^4.17.24
+      version: 4.17.24
     "@types/react":
       specifier: ^19.2.7
       version: 19.2.17
@@ -39,6 +42,12 @@ catalogs:
     "@vitest/coverage-v8":
       specifier: ^4.1.9
       version: 4.1.9
+    "@vueuse/core":
+      specifier: ^14.3.0
+      version: 14.3.0
+    ahooks:
+      specifier: ^3.9.7
+      version: 3.9.7
     cross-env:
       specifier: ^10.1.0
       version: 10.1.0
@@ -54,6 +63,9 @@ catalogs:
     knip:
       specifier: ^6.20.0
       version: 6.20.0
+    lodash:
+      specifier: ^4.18.1
+      version: 4.18.1
     pinia:
       specifier: ^3.0.4
       version: 3.0.4
@@ -208,6 +220,12 @@ importers:
       "@repo/utils":
         specifier: workspace:*
         version: link:../../packages/shared/utils
+      ahooks:
+        specifier: "catalog:"
+        version: 3.9.7(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      lodash:
+        specifier: "catalog:"
+        version: 4.18.1
       react:
         specifier: "catalog:"
         version: 19.2.7
@@ -242,6 +260,9 @@ importers:
       "@testing-library/react":
         specifier: "catalog:"
         version: 16.3.2(@testing-library/dom@10.4.1)(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      "@types/lodash":
+        specifier: "catalog:"
+        version: 4.17.24
       "@types/react":
         specifier: "catalog:"
         version: 19.2.17
@@ -284,6 +305,12 @@ importers:
       "@repo/vue-ui":
         specifier: workspace:*
         version: link:../../packages/vue/ui
+      "@vueuse/core":
+        specifier: "catalog:"
+        version: 14.3.0(vue@3.5.38(typescript@6.0.3))
+      lodash:
+        specifier: "catalog:"
+        version: 4.18.1
       pinia:
         specifier: "catalog:"
         version: 3.0.4(typescript@6.0.3)(vue@3.5.38(typescript@6.0.3))
@@ -312,6 +339,9 @@ importers:
       "@testing-library/vue":
         specifier: "catalog:"
         version: 8.1.0(@vue/compiler-dom@3.5.38)(@vue/compiler-sfc@3.5.38)(@vue/server-renderer@3.5.38(vue@3.5.38(typescript@6.0.3)))(vue@3.5.38(typescript@6.0.3))
+      "@types/lodash":
+        specifier: "catalog:"
+        version: 4.17.24
       "@vitejs/plugin-vue":
         specifier: "catalog:"
         version: 6.0.7(vite@8.1.0(@types/node@24.13.2)(esbuild@0.27.7)(jiti@2.7.0)(sass-embedded@1.100.0)(sass@1.100.0)(yaml@2.9.0))(vue@3.5.38(typescript@6.0.3))
@@ -2250,10 +2280,22 @@ packages:
         integrity: sha512-GhdPgy1el4/ImP05X05Uw4cw2/M93BCUmnEvWZNStlCzEKME4Fkk+YpoA5OiHNQmoS7Cafb8Xa3Pya8m1Qrzeg==,
       }
 
+  "@types/js-cookie@3.0.6":
+    resolution:
+      {
+        integrity: sha512-wkw9yd1kEXOPnvEeEV1Go1MmxtBJL0RR79aOTAApecWFVu7w0NNXNqhcWgvw2YgZDYadliXkl14pa3WXw5jlCQ==,
+      }
+
   "@types/json-schema@7.0.15":
     resolution:
       {
         integrity: sha512-5+fP8P8MFNC+AyZCDxrB2pkZFPGzqQWUzpSeuuVLvm8VMcorNYavBqoFcxK8bQz4Qsbn4oUEEem4wDLfcysGHA==,
+      }
+
+  "@types/lodash@4.17.24":
+    resolution:
+      {
+        integrity: sha512-gIW7lQLZbue7lRSWEFql49QJJWThrTFFeIMJdp3eH4tKoxm1OvEPg02rm4wCCSHS0cL3/Fizimb35b7k8atwsQ==,
       }
 
   "@types/node@24.13.2":
@@ -2274,6 +2316,12 @@ packages:
     resolution:
       {
         integrity: sha512-MXfmqaVPEVgkBT/aY0aGCkRWWtByiYQXo3xdQ8r5RzuFrPiRn8Gar2tQdXSUQ2GKV3bkXckek89V8wQBY2Q/Aw==,
+      }
+
+  "@types/web-bluetooth@0.0.21":
+    resolution:
+      {
+        integrity: sha512-oIQLCGWtcFZy2JW77j9k8nHzAOpqMHLQejDA48XXMWH6tjCQHz5RCFz1bzsmROyL6PUm+LLnUiI4BCn221inxA==,
       }
 
   "@types/whatwg-mimetype@3.0.2":
@@ -2582,6 +2630,28 @@ packages:
       "@vue/server-renderer":
         optional: true
 
+  "@vueuse/core@14.3.0":
+    resolution:
+      {
+        integrity: sha512-aHfz47g0ZhMtTVHmIzMVpJy8ePhhOy68GY5bv110+5DVtZ+W7BsOx+m61UNQqfrWyPztIHIanWa3E2tib3NFIw==,
+      }
+    peerDependencies:
+      vue: ^3.5.0
+
+  "@vueuse/metadata@14.3.0":
+    resolution:
+      {
+        integrity: sha512-BwxmbAzwAVF50+MW57GXOUEV61nFBGnlBvrTqj49PqWJu3uw7hdu72ztXeZ33RdZtDY6kO+bfCAE1PCn88Tktw==,
+      }
+
+  "@vueuse/shared@14.3.0":
+    resolution:
+      {
+        integrity: sha512-bZpge9eSXwa4ToSiqJ7j6KRwhAsneMFoSz3LMWKQDkqimm3D/tbFlrklrs/IOqC8tEcYmXQZJ6N0UrjhBirVCg==,
+      }
+    peerDependencies:
+      vue: ^3.5.0
+
   abbrev@2.0.0:
     resolution:
       {
@@ -2604,6 +2674,15 @@ packages:
       }
     engines: { node: ">=0.4.0" }
     hasBin: true
+
+  ahooks@3.9.7:
+    resolution:
+      {
+        integrity: sha512-S0lvzhbdlhK36RFBkGv+RbOM/dbbweym+BIHM/bwwuWVSVN5TuVErHPMWo4w0t1NDYg5KPp2iEf7Y7E5LASYiw==,
+      }
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+      react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
 
   ajv@6.15.0:
     resolution:
@@ -3075,6 +3154,12 @@ packages:
     resolution:
       {
         integrity: sha512-z1HGKcYy2xA8AGQfwrn0PAy+PB7X/GSj3UVJW9qKyn43xWa+gl5nXmU4qqLMRzWVLFC8KusUX8T/0kCiOYpAIQ==,
+      }
+
+  dayjs@1.11.21:
+    resolution:
+      {
+        integrity: sha512-98IT+HOahAisibz/yjKbzuOBwYcjJ7BCLPzARyHiyEBmRz4fatF+KPJszEHXsGYjUG234aH/cOjW1wwTbKUZlA==,
       }
 
   debug@4.4.3:
@@ -3992,6 +4077,13 @@ packages:
       }
     engines: { node: ">= 0.4" }
 
+  intersection-observer@0.12.2:
+    resolution:
+      {
+        integrity: sha512-7m1vEcPCxXYI8HqnL8CKI6siDyD+eIWSwgB3DZA+ZTogxk9I4CDnj4wilt9x/+/QbHI4YG5YZNmC6458/e9Ktg==,
+      }
+    deprecated: The Intersection Observer polyfill is no longer needed and can safely be removed. Intersection Observer has been Baseline since 2019.
+
   is-arguments@1.2.0:
     resolution:
       {
@@ -4525,6 +4617,12 @@ packages:
     resolution:
       {
         integrity: sha512-jttmRe7bRse52OsWIMDLaXxWqRAmtIUccAQ3garviCqJjafXOfNMO0yMfNpdD6zbGaTU0P5Nz7e7gAT6cKmJRw==,
+      }
+
+  lodash@4.18.1:
+    resolution:
+      {
+        integrity: sha512-dMInicTPVE8d1e5otfwmmjlxkZoUpiVLwyeTdUsi/Caj/gfzzblBcCE5sRHV/AsjuCmxWrte2TNGSYuCeCq+0Q==,
       }
 
   log-update@6.1.0:
@@ -5072,6 +5170,12 @@ packages:
     peerDependencies:
       react: ^19.2.7
 
+  react-fast-compare@3.2.2:
+    resolution:
+      {
+        integrity: sha512-nsO+KSNgo1SbJqJEYRE9ERzo7YtYbou/OqjSQKxV7jcKox7+usiUVZOAC+XnDOABXggQTno0Y1CpVnuWEc1boQ==,
+      }
+
   react-is@17.0.2:
     resolution:
       {
@@ -5142,6 +5246,12 @@ packages:
         integrity: sha512-Xf0nWe6RseziFMu+Ap9biiUbmplq6S9/p+7w7YXP/JBHhrUDDUhwa+vANyubuqfZWTveU//DYVGsDG7RKL/vEw==,
       }
     engines: { node: ">=0.10.0" }
+
+  resize-observer-polyfill@1.5.1:
+    resolution:
+      {
+        integrity: sha512-LwZrotdHOo12nQuZlHEmtuXdqGoOD0OhaxopaNFxWzInpEgaLWoVuAMbTzixuosCx2nEG58ngzW3vxdWoxIgdg==,
+      }
 
   resolve-from@4.0.0:
     resolution:
@@ -5420,6 +5530,13 @@ packages:
       {
         integrity: sha512-eNv+WrVbKu1f3vbYJT/xtiF5syA5HPIMtf9IgY/nKg0sWqzAUEvqY/xm7OcZc/qafLx/iO9FgOmeSAp4v5ti/Q==,
       }
+
+  screenfull@5.2.0:
+    resolution:
+      {
+        integrity: sha512-9BakfsO2aUQN2K9Fdbj87RJIEZ82Q9IGim7FqM5OsebfoFC6ZHXgDq/KvniuLTPdeM8wY2o6Dj3WQ7KeQCj3cA==,
+      }
+    engines: { node: ">=0.10.0" }
 
   semver@6.3.1:
     resolution:
@@ -7213,7 +7330,11 @@ snapshots:
 
   "@types/estree@1.0.9": {}
 
+  "@types/js-cookie@3.0.6": {}
+
   "@types/json-schema@7.0.15": {}
+
+  "@types/lodash@4.17.24": {}
 
   "@types/node@24.13.2":
     dependencies:
@@ -7226,6 +7347,8 @@ snapshots:
   "@types/react@19.2.17":
     dependencies:
       csstype: 3.2.3
+
+  "@types/web-bluetooth@0.0.21": {}
 
   "@types/whatwg-mimetype@3.0.2": {}
 
@@ -7495,6 +7618,19 @@ snapshots:
     optionalDependencies:
       "@vue/server-renderer": 3.5.38(vue@3.5.38(typescript@6.0.3))
 
+  "@vueuse/core@14.3.0(vue@3.5.38(typescript@6.0.3))":
+    dependencies:
+      "@types/web-bluetooth": 0.0.21
+      "@vueuse/metadata": 14.3.0
+      "@vueuse/shared": 14.3.0(vue@3.5.38(typescript@6.0.3))
+      vue: 3.5.38(typescript@6.0.3)
+
+  "@vueuse/metadata@14.3.0": {}
+
+  "@vueuse/shared@14.3.0(vue@3.5.38(typescript@6.0.3))":
+    dependencies:
+      vue: 3.5.38(typescript@6.0.3)
+
   abbrev@2.0.0: {}
 
   acorn-jsx@5.3.2(acorn@8.17.0):
@@ -7502,6 +7638,21 @@ snapshots:
       acorn: 8.17.0
 
   acorn@8.17.0: {}
+
+  ahooks@3.9.7(react-dom@19.2.7(react@19.2.7))(react@19.2.7):
+    dependencies:
+      "@babel/runtime": 7.29.7
+      "@types/js-cookie": 3.0.6
+      dayjs: 1.11.21
+      intersection-observer: 0.12.2
+      js-cookie: 3.0.8
+      lodash: 4.18.1
+      react: 19.2.7
+      react-dom: 19.2.7(react@19.2.7)
+      react-fast-compare: 3.2.2
+      resize-observer-polyfill: 1.5.1
+      screenfull: 5.2.0
+      tslib: 2.8.1
 
   ajv@6.15.0:
     dependencies:
@@ -7761,6 +7912,8 @@ snapshots:
   cssesc@3.0.0: {}
 
   csstype@3.2.3: {}
+
+  dayjs@1.11.21: {}
 
   debug@4.4.3:
     dependencies:
@@ -8333,6 +8486,8 @@ snapshots:
       hasown: 2.0.4
       side-channel: 1.1.1
 
+  intersection-observer@0.12.2: {}
+
   is-arguments@1.2.0:
     dependencies:
       call-bound: 1.0.4
@@ -8606,6 +8761,8 @@ snapshots:
   lodash.merge@4.6.2: {}
 
   lodash.truncate@4.4.2: {}
+
+  lodash@4.18.1: {}
 
   log-update@6.1.0:
     dependencies:
@@ -8917,6 +9074,8 @@ snapshots:
       react: 19.2.7
       scheduler: 0.27.0
 
+  react-fast-compare@3.2.2: {}
+
   react-is@17.0.2: {}
 
   react-router-dom@7.18.0(react-dom@19.2.7(react@19.2.7))(react@19.2.7):
@@ -8955,6 +9114,8 @@ snapshots:
   require-directory@2.1.1: {}
 
   require-from-string@2.0.2: {}
+
+  resize-observer-polyfill@1.5.1: {}
 
   resolve-from@4.0.0: {}
 
@@ -9119,6 +9280,8 @@ snapshots:
     optional: true
 
   scheduler@0.27.0: {}
+
+  screenfull@5.2.0: {}
 
   semver@6.3.1: {}
 

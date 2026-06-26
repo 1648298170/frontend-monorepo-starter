@@ -26,7 +26,20 @@ catalog:
 - 应用和组件包必须声明自己直接使用的依赖。
 - 仓库内部包继续使用 `workspace:*`。
 - React、Vue、路由、状态库、框架类型和 Vite 框架插件由 catalog 管理。
+- 应用层常用基础库也由 catalog 管理：React 应用使用 `ahooks`，Vue 应用使用
+  `@vueuse/core`，两类应用都可以按需使用 `lodash`。
 - 根目录工程工具链由根 `package.json` 管理，不为了形式统一全部移入 catalog。
+
+## 应用基础库约定
+
+| 依赖           | 使用范围         | 说明                                      |
+| -------------- | ---------------- | ----------------------------------------- |
+| `ahooks`       | React 应用       | React 业务 Hook、异步请求和交互状态复用。 |
+| `@vueuse/core` | Vue 应用         | Vue 浏览器能力和组合式工具函数复用。      |
+| `lodash`       | React / Vue 应用 | 通用数据处理，优先按方法路径导入。        |
+
+这些依赖的版本放在 `pnpm-workspace.yaml` 的 `catalog` 中统一维护，但仍然只声明在真实使用
+它们的应用或 Package 中。不要因为 catalog 已经登记，就把它们安装到根目录。
 
 ## 为指定 Workspace 安装依赖
 

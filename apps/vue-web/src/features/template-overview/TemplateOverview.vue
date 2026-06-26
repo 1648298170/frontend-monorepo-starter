@@ -1,13 +1,17 @@
 <script setup lang="ts">
+import startCase from "lodash/startCase";
 import { computed } from "vue";
+import { useTitle } from "@vueuse/core";
 
 import { MetricCard } from "@repo/vue-ui";
 import { formatDate, formatPercent } from "@repo/utils";
 
-// 导入应用级运行时配置 Composable。
+// 导入应用级运行时配置 Composable，示例业务组件只读取已经装配好的稳定配置。
 import { useRuntimeConfig } from "@/composables/useRuntimeConfig";
 
 const { config } = useRuntimeConfig();
+// VueUse 适合放置浏览器交互类 Composable；这里用应用名维护页面标题示例。
+useTitle(computed(() => `${config.appName} | Vue Template`));
 
 const metrics = computed(() => [
   {
@@ -26,6 +30,14 @@ const metrics = computed(() => [
     tone: "neutral" as const,
   },
 ]);
+
+// lodash 用于通用数据和文案处理；这里集中派生展示标签，避免模板里写转换逻辑。
+const normalizedMetrics = computed(() =>
+  metrics.value.map((metric) => ({
+    ...metric,
+    label: startCase(metric.label),
+  }))
+);
 </script>
 
 <template>
@@ -48,7 +60,7 @@ const metrics = computed(() => [
       aria-label="Template capabilities"
     >
       <MetricCard
-        v-for="metric in metrics"
+        v-for="metric in normalizedMetrics"
         :key="metric.label"
         :label="metric.label"
         :value="metric.value"
