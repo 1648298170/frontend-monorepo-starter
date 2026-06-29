@@ -55,7 +55,8 @@
     "test:scripts": "vitest run scripts/generator scripts/version",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "clean": "turbo clean && rimraf node_modules",
+    "clean": "turbo clean && pnpm clean:node-modules",
+    "clean:node-modules": "node scripts/clean-node-modules.mjs",
     "prepare": "husky"
   },
   "devDependencies": {
