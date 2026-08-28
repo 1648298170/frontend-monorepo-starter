@@ -6,6 +6,7 @@ import { formatDate, formatPercent } from "@repo/utils";
 
 // 导入应用级运行时配置 Hook，示例业务组件只读取已经装配好的稳定配置。
 import { useRuntimeConfig } from "@/hooks/useRuntimeConfig";
+import classes from "./TemplateOverview.module.scss";
 
 const metrics = [
   {
@@ -31,24 +32,17 @@ export function TemplateOverview() {
   const formatMetricLabel = useMemoizedFn((label: string) => startCase(label));
 
   return (
-    <main className="mx-auto grid w-[min(1040px,calc(100%_-_32px))] gap-7 py-16">
-      <section className="grid gap-3">
-        <p className="m-0 text-sm font-bold text-emerald-800 uppercase">
-          {config.appName}
-        </p>
-        <h1 className="m-0 max-w-3xl text-4xl leading-none font-bold md:text-6xl">
-          React business app template
-        </h1>
-        <p className="m-0 max-w-2xl text-lg leading-relaxed text-slate-600">
+    <main className={classes.root}>
+      <section className={classes.header}>
+        <p className={classes.eyebrow}>{config.appName}</p>
+        <h1 className={classes.title}>React business app template</h1>
+        <p className={classes.description}>
           Thin app layer with shared packages for request, config, utilities,
           and React UI.
         </p>
       </section>
 
-      <section
-        className="grid grid-cols-[repeat(auto-fit,minmax(220px,1fr))] gap-4"
-        aria-label="Template capabilities"
-      >
+      <section className={classes.metrics} aria-label="Template capabilities">
         {metrics.map((metric) => (
           <MetricCard
             key={metric.label}

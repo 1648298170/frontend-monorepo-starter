@@ -9,8 +9,6 @@ import { RouterProvider } from "react-router-dom";
 import { router } from "./app/router";
 // 导入应用最外层异常边界，避免未捕获渲染错误导致空白页面。
 import { AppErrorBoundary } from "./app/error-handling/AppErrorBoundary";
-// 导入 Tailwind CSS 4 样式入口。
-import "./styles/tailwind.css";
 // 导入应用级 Sass 样式入口。
 import "./styles/main.scss";
 

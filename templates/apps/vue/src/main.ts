@@ -11,8 +11,6 @@ import { registerErrorHandling } from "./app/error-handling/register-error-handl
 import { registerRouterGuards } from "./app/router/guards";
 // 导入应用唯一的 Pinia 实例。
 import { pinia } from "./app/store";
-// 导入 Tailwind CSS 4 样式入口。
-import "./styles/tailwind.css";
 // 导入应用级 Sass 样式入口。
 import "./styles/main.scss";
 

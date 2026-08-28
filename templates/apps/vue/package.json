@@ -44,7 +44,6 @@
     "@playwright/test": "catalog:",
     "@repo/playwright-config": "workspace:*",
     "@repo/tsconfig": "workspace:*",
-    "@tailwindcss/vite": "catalog:",
     "@testing-library/jest-dom": "catalog:",
     "@testing-library/vue": "catalog:",
     "@types/lodash": "catalog:",
@@ -53,7 +52,6 @@
     "happy-dom": "catalog:",
     "rollup-plugin-visualizer": "catalog:",
     "sass-embedded": "catalog:",
-    "tailwindcss": "catalog:",
     "vue-tsc": "catalog:"
   }
 }

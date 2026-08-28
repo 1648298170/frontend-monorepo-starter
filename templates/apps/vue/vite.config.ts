@@ -1,8 +1,6 @@
 // 导入 Node.js URL 到文件路径的转换工具，以及标准 URL 构造函数。
 import { fileURLToPath, URL } from "node:url";
 
-// 导入 Tailwind CSS 4 的 Vite 插件。
-import tailwindcss from "@tailwindcss/vite";
 // 导入 Vue 官方 Vite 插件，提供 SFC 编译和开发阶段热更新。
 import vue from "@vitejs/plugin-vue";
 // 导入构建产物可视化插件，仅在分析构建时启用。
@@ -26,12 +24,10 @@ export default defineConfig(({ mode }) => {
 
   // 返回 Vue 应用最终使用的 Vite 配置。
   return {
-    // 注册 Vue、Tailwind 和按需启用的构建分析插件。
+    // 注册 Vue 和按需启用的构建分析插件。
     plugins: [
       // 启用 Vue 3 单文件组件编译和开发阶段热更新。
       vue(),
-      // 启用 Tailwind CSS 4 的扫描、转换和热更新能力。
-      tailwindcss(),
       // BUILD_ANALYZE 不为 true 时返回 false，Vite 会忽略该插件项。
       shouldAnalyze &&
         // 生成包含模块体积、gzip 和 brotli 大小的静态分析报告。

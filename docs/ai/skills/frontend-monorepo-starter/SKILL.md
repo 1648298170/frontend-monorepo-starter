@@ -1,6 +1,6 @@
 ---
 name: frontend-monorepo-starter
-description: Use this project skill whenever working inside the frontend-monorepo-starter repository. It should be used for changes to apps, packages, templates, scripts, generators, pnpm catalog dependencies, Vite, TypeScript, ESLint, Stylelint, Tailwind, Playwright, Vitest, docs, or monorepo architecture. The skill routes the AI to the repository's current conventions and verification workflow so changes stay maintainable and extensible.
+description: Use this project skill whenever working inside the frontend-monorepo-starter repository. It should be used for changes to apps, packages, templates, scripts, generators, pnpm catalog dependencies, Vite, TypeScript, ESLint, Stylelint, Sass, Playwright, Vitest, docs, or monorepo architecture. The skill routes the AI to the repository's current conventions and verification workflow so changes stay maintainable and extensible.
 ---
 
 # Frontend Monorepo Starter Skill
@@ -16,7 +16,7 @@ description: Use this project skill whenever working inside the frontend-monorep
 - 修改 `packages/shared/*`、`packages/react/*`、`packages/vue/*`、`packages/tooling/*`。
 - 修改 `templates/apps/*` 或 `scripts/generator/*`。
 - 新增、升级或移动依赖。
-- 修改 Vite、TypeScript、ESLint、Prettier、Stylelint、Tailwind、Sass、Playwright、Vitest。
+- 修改 Vite、TypeScript、ESLint、Prettier、Stylelint、Sass、Playwright、Vitest。
 - 修改 README、项目指南、规范文档或路线图。
 - 调整 monorepo 架构、包边界、命名规范或生成器能力。
 

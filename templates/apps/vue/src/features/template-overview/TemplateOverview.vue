@@ -41,22 +41,20 @@ const normalizedMetrics = computed(() =>
 </script>
 
 <template>
-  <main class="mx-auto grid w-[min(1040px,calc(100%_-_32px))] gap-7 py-16">
-    <section class="grid gap-3">
-      <p class="m-0 text-sm font-bold text-emerald-800 uppercase">
+  <main class="template-overview">
+    <section class="template-overview__header">
+      <p class="template-overview__eyebrow">
         {{ config.appName }}
       </p>
-      <h1 class="m-0 max-w-3xl text-4xl leading-none font-bold md:text-6xl">
-        Vue business app template
-      </h1>
-      <p class="m-0 max-w-2xl text-lg leading-relaxed text-slate-600">
+      <h1 class="template-overview__title">Vue business app template</h1>
+      <p class="template-overview__description">
         Thin app layer with shared packages for request, config, utilities, and
         Vue UI.
       </p>
     </section>
 
     <section
-      class="grid grid-cols-[repeat(auto-fit,minmax(220px,1fr))] gap-4"
+      class="template-overview__metrics"
       aria-label="Template capabilities"
     >
       <MetricCard
@@ -69,3 +67,52 @@ const normalizedMetrics = computed(() =>
     </section>
   </main>
 </template>
+
+<style scoped lang="scss">
+.template-overview {
+  display: grid;
+  gap: 1.75rem;
+  margin-inline: auto;
+  width: min(1040px, calc(100% - 32px));
+  padding-block: 4rem;
+
+  &__header {
+    display: grid;
+    gap: 0.75rem;
+  }
+
+  &__eyebrow {
+    margin: 0;
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: #065f46;
+    text-transform: uppercase;
+  }
+
+  &__title {
+    margin: 0;
+    max-width: 48rem;
+    font-size: 2.25rem;
+    line-height: 1;
+    font-weight: 700;
+
+    @media (width >= 768px) {
+      font-size: 3.75rem;
+    }
+  }
+
+  &__description {
+    margin: 0;
+    max-width: 42rem;
+    font-size: 1.125rem;
+    line-height: 1.625;
+    color: #475569;
+  }
+
+  &__metrics {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1rem;
+  }
+}
+</style>

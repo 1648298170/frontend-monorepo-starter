@@ -6,7 +6,6 @@
 docs/conventions/application-structure.md
 docs/conventions/state-and-routing.md
 docs/conventions/environment-variables.md
-docs/conventions/tailwind.md
 docs/conventions/sass.md
 docs/conventions/testing.md
 docs/conventions/code-comments.md
@@ -40,7 +39,7 @@ docs/conventions/code-comments.md
 ## 样式和 Design Token
 
 - 应用可以使用 `@repo/design-tokens` 的 CSS，也允许自定义命名和样式体系。
-- Tailwind 与 Sass 已集成，优先遵守当前应用的写法。
+- 样式统一使用 Sass/SCSS 与 BEM 类名，不引入 Tailwind、UnoCSS 等原子 CSS 库。
 - 不要为了统一而强制所有应用样式都下沉到公共包。
 
 ## 应用改动后检查

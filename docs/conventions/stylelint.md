@@ -19,24 +19,17 @@ packages/**/*.{css,scss,sass,vue}
 
 构建产物、依赖目录、覆盖率和 Turbo 缓存会被忽略。
 
-## Tailwind CSS 4
+## 禁止原子 CSS 库
 
-Stylelint 允许 Tailwind CSS 4 的 CSS-first at-rule：
+本仓库不使用 Tailwind CSS、UnoCSS 等原子 CSS（utility-first）方案，样式统一由
+Sass/SCSS + BEM 命名 + Stylelint 规则承载。
 
-```txt
-@theme
-@source
-@utility
-@variant
-@custom-variant
-@apply
-@reference
-@config
-@plugin
-```
-
-不要为了消除 Stylelint 报错而全局关闭未知 at-rule 检查。新增 Tailwind
-官方指令时，应将具体名称加入允许列表。
+- 不要安装 Tailwind、UnoCSS、Windi CSS 等原子 CSS 依赖。
+- 不要在样式中使用 `@apply`、`@theme`、`@utility` 等原子 CSS 指令；Stylelint 的
+  未知 at-rule 检查会直接报错。
+- 页面与组件样式写在应用的 `.scss` 文件或 Vue SFC 的 `<style lang="scss">` 中，
+  类名遵循 kebab-case 或 BEM（见 naming.md）。
+- 通用视觉规则沉淀到 `packages/shared/design-tokens` 或 UI 包，避免各应用重复。
 
 ## Design Tokens
 

@@ -32,29 +32,12 @@ catalog:
 因此 Vue 的 `<style lang="scss">`、React 的 `.module.scss` 和应用 Sass 文件都可以
 直接使用 `abstracts` 公开的变量、函数与 mixin，无需重复 `@use`。
 
-## 与 Tailwind CSS 的边界
-
-Tailwind CSS 4 和 Sass 使用独立入口：
-
-```ts
-import "./styles/tailwind.css";
-import "./styles/main.scss";
-```
-
-- `tailwind.css` 只包含 `@import "tailwindcss"`，由 Tailwind Vite 插件处理。
-- `main.scss` 存放 Sass 变量、mixin、函数、嵌套和应用级全局样式。
-- 不要在 `.scss` 中导入 Tailwind CSS，也不要让 Sass 处理 Tailwind 指令。
-
-这种分离可以避免 Sass 的 `@import` 语义与 Tailwind CSS 4 的 CSS-first
-处理模型冲突。
-
 ## 文件组织
 
 应用样式建议：
 
 ```txt
 src/styles/
-  tailwind.css
   main.scss
   abstracts/
     _variables.scss
@@ -82,7 +65,7 @@ React 组件需要局部隔离时，优先使用 `Component.module.scss`。
 
 ## 使用原则
 
-- 页面布局与常见视觉属性优先使用 Tailwind utility。
+- 页面布局、组件样式和常见视觉属性统一使用 Sass/SCSS 与 BEM 类名编写。
 - Sass 用于复杂选择器、mixin、计算和第三方样式覆盖。
 - 设计颜色和间距应来自 `@repo/design-tokens`，避免在 Sass 中再维护一套品牌令牌。
 - 不滥用深层嵌套，选择器嵌套建议不超过三层。

@@ -34,7 +34,7 @@
 | 构建      | Vite 8 + Rolldown                                |
 | React     | React 19、React Router、Zustand                  |
 | Vue       | Vue 3、Vue Router、Pinia                         |
-| 样式      | Tailwind CSS 4、Sass、Design Token、Stylelint    |
+| 样式      | Sass、Design Token、Stylelint（不使用原子 CSS）  |
 | 质量      | TypeScript、ESLint、Prettier、Vitest、Playwright |
 | 依赖治理  | pnpm catalog、Knip                               |
 
@@ -598,23 +598,7 @@ DEV_PROXY_TARGET=http://localhost:3000
 
 ## 9. 样式如何选择
 
-当前项目同时支持 Tailwind CSS 4、Sass 和 Design Token。
-
-### Tailwind
-
-适合：
-
-- 页面布局。
-- 间距、排版和常用视觉属性。
-- Feature 内快速组合。
-
-```tsx
-<section className="grid gap-4 p-6">
-  <h1 className="text-xl font-semibold">账号中心</h1>
-</section>
-```
-
-Tailwind 4 使用自动内容检测，当前不需要 `tailwind.config.js`。
+当前项目样式由 Sass、Design Token 和 Stylelint 承载，不使用原子 CSS 库。
 
 ### Sass
 
@@ -1135,14 +1119,6 @@ pnpm version:app --app admin-web --bump patch --dry-run
 生成 Page 不会自动注册路由。需要在 `src/app/router/routes` 中增加路由模块，并组合
 到 Router。
 
-### Tailwind 类没有生效
-
-确认：
-
-1. 类名是完整字符串，没有使用 `text-${color}-500` 等动态拼接。
-2. 应用入口导入了 `styles/tailwind.css`。
-3. `vite.config.ts` 注册了 `@tailwindcss/vite`。
-
 ### Sass 变量不可用
 
 检查变量或 mixin 是否通过 `src/styles/abstracts/index.scss` 使用 `@forward` 暴露。
@@ -1170,8 +1146,8 @@ Vite 只会自动注入这个入口。
 
 ### 第四天
 
-- 阅读 Tailwind、Sass 和 Design Token 规范。
-- 完成一个同时使用 utility 和共享 Token 的页面区域。
+- 阅读 Sass 和 Design Token 规范。
+- 完成一个同时使用共享 Token 和 BEM 类名的页面区域。
 
 ### 第五天
 
@@ -1194,7 +1170,6 @@ Vite 只会自动注入这个入口。
 | Vite 与构建    | [`../conventions/vite.md`](../conventions/vite.md)                                   |
 | 状态与路由     | [`../conventions/state-and-routing.md`](../conventions/state-and-routing.md)         |
 | 测试           | [`../conventions/testing.md`](../conventions/testing.md)                             |
-| Tailwind       | [`../conventions/tailwind.md`](../conventions/tailwind.md)                           |
 | Sass           | [`../conventions/sass.md`](../conventions/sass.md)                                   |
 | Stylelint      | [`../conventions/stylelint.md`](../conventions/stylelint.md)                         |
 | 权限           | [`../conventions/authorization.md`](../conventions/authorization.md)                 |

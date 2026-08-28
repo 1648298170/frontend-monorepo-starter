@@ -11,7 +11,6 @@ React 与 Vue 应用使用 Vite 8 和 Rolldown。配置遵循“按当前需求�
 - 通过环境变量配置开发服务器 host、port、open 和代理。
 - 使用 `strictPort`，端口占用时直接报错。
 - 配置 `@` 指向应用的 `src`。
-- 使用 Tailwind CSS 4 Vite 插件。
 - 自动向 SCSS 注入 `styles/abstracts/index.scss`。
 - 使用 Rolldown 手动拆分稳定的框架 vendor chunk。
 - React 和 Vue 路由页面均使用动态导入实现页面级拆包。
@@ -69,7 +68,7 @@ Vite 自动向每个 SCSS 编译入口注入：
 
 以下能力目前没有明确需求，因此不加入模板：
 
-- UnoCSS：项目已经使用 Tailwind CSS 4。
+- UnoCSS：项目不使用原子 CSS 库。
 - Element Plus 自动导入：模板没有绑定具体 Vue UI 框架。
 - Vue API 和组件自动导入：显式 import 更容易搜索和维护。
 - SVG Sprite 插件：尚未确定图标资产规范。

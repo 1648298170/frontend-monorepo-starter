@@ -75,7 +75,7 @@ pnpm g app \
 - React Router + Zustand 或 Vue Router + Pinia。
 - 应用级运行时配置、请求客户端和错误上报单例。
 - 错误边界、路由错误页和首页懒加载。
-- Tailwind CSS 4、Sass 和 Design Token。
+- Sass 和 Design Token。
 - Vitest、Testing Library 与 happy-dom。
 - local、test、uat、production 环境文件。
 - 示例 Feature、页面、Store、Hook 或 Composable。

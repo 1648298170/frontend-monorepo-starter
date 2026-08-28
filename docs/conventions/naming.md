@@ -85,8 +85,6 @@ const apiResponse = {
 }
 ```
 
-规则不检查 JSX 或 Vue 模板中的 Tailwind utility 字符串。
-
 第三方组件库样式覆盖统一放入：
 
 ```txt

@@ -71,7 +71,7 @@ pnpm --filter @apps/${appName} version:patch
 - \`src/app\`：应用装配、路由、全局 Store、运行时服务和错误处理。
 - \`src/pages\`：路由页面和页面级组合。
 - \`src/features\`：独立业务能力。
-- \`src/styles\`：Tailwind、Sass 和应用全局样式。
+- \`src/styles\`：Sass 和应用全局样式。
 - \`src/test\`：Vitest 全局测试配置。
 - \`e2e\`：Playwright 端到端测试场景。
 

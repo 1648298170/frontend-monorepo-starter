@@ -14,7 +14,7 @@
 - pnpm Workspace、catalog 和 Turbo 任务编排。
 - React 19 与 Vue 3 两套 Vite 8、Rolldown 业务应用模板。
 - React Router、Vue Router、Zustand、Pinia 的基础集成。
-- Tailwind CSS 4、Sass、Design Token 和 Stylelint。
+- Sass、Design Token 和 Stylelint。
 - ESLint、Prettier、EditorConfig、VS Code 与命名规范。
 - 请求客户端、运行时配置、权限、错误处理和可观测性接口。
 - Vitest、Testing Library、Playwright、组件测试、脚本测试和双应用 E2E 冒烟。
@@ -276,7 +276,7 @@ Source Map 不应作为公开静态资源随应用发布。
 
 重大决策建议增加 ADR，例如：
 
-- 为什么使用 Tailwind 而不是 UnoCSS。
+- 为什么禁止原子 CSS 库而使用 Sass + BEM。
 - 为什么应用模板同时支持 React 和 Vue。
 - 为什么路由不自动生成。
 - 为什么共享请求包不依赖状态库。
@@ -498,7 +498,7 @@ qiankun 集成进入正式模板前必须满足：
 当前不建议直接实施：
 
 - 自动修改业务路由、菜单和权限。
-- 同时维护 Tailwind 与 UnoCSS 两套原子 CSS 体系。
+- 引入 Tailwind、UnoCSS 等原子 CSS 库。
 - 为替换 Turbo 而无需求引入 Nx。
 - 在单体业务规模下提前引入微前端。
 - 把所有 Workspace 包发布到 npm Registry。

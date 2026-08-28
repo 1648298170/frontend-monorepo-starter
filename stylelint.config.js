@@ -1,16 +1,3 @@
-// Tailwind CSS 4 提供的自定义 at-rule 列表，供 CSS 和 SCSS 规则复用。
-const tailwindAtRules = [
-  "apply", // 允许使用 @apply 组合已有 utility。
-  "config", // 允许使用 @config 加载兼容的 JavaScript 配置。
-  "custom-variant", // 允许使用 @custom-variant 定义自定义变体。
-  "plugin", // 允许使用 @plugin 加载 Tailwind 插件。
-  "reference", // 允许使用 @reference 引用主题、utility 和变体。
-  "source", // 允许使用 @source 显式声明类名扫描来源。
-  "theme", // 允许使用 @theme 定义 Tailwind 主题变量。
-  "utility", // 允许使用 @utility 定义自定义 utility。
-  "variant", // 允许使用 @variant 应用 Tailwind 变体。
-]; // Tailwind at-rule 列表结束。
-
 // 导出 Stylelint 的 ESM 配置对象。
 export default {
   // 按顺序继承基础 CSS、SCSS 和 Vue SFC 推荐规则。
@@ -30,22 +17,6 @@ export default {
 
   // 定义全仓默认生效的 Stylelint 规则。
   rules: {
-    // 检查未知 CSS at-rule，同时放行 Tailwind CSS 4 指令。
-    "at-rule-no-unknown": [
-      true, // 启用未知 CSS at-rule 检查。
-      {
-        ignoreAtRules: tailwindAtRules, // 不把 Tailwind 指令识别为错误。
-      }, // CSS at-rule 检查选项结束。
-    ], // CSS at-rule 规则配置结束。
-
-    // 检查未知 SCSS at-rule，同时放行 Tailwind CSS 4 指令。
-    "scss/at-rule-no-unknown": [
-      true, // 启用未知 SCSS at-rule 检查。
-      {
-        ignoreAtRules: tailwindAtRules, // 不把 Tailwind 指令识别为错误。
-      }, // SCSS at-rule 检查选项结束。
-    ], // SCSS at-rule 规则配置结束。
-
     // 强制作者编写的 CSS 类名使用 kebab-case 或 BEM。
     "selector-class-pattern": [
       "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*(?:__[a-z0-9]+(?:-[a-z0-9]+)*)?(?:--[a-z0-9]+(?:-[a-z0-9]+)*)?$",
@@ -53,6 +24,8 @@ export default {
         message: "CSS 类名应使用 kebab-case 或 BEM。",
       },
     ],
+    // 未知 at-rule 检查使用共享配置的默认行为，天然拦截 Tailwind、UnoCSS
+    // 等原子 CSS 指令（@apply、@theme、@utility 等），不要为消报错而放行。
   }, // 全仓默认规则结束。
 
   // 为特定目录追加更严格或不同的局部规则。
