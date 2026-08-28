@@ -29,6 +29,9 @@ apps/*/src/app/error-handling
 - 标准 `AbortSignal` 主动取消。
 - 请求、响应和错误扩展钩子。
 - JSON/文本响应解析。
+- 查询参数自动序列化（跳过 null/undefined）。
+- 对象请求体自动 JSON 序列化并补齐 content-type。
+- `responseType` 支持 json/text/blob/arrayBuffer（默认按 Content-Type 自动判断）。
 - `HttpError` 和 `RequestTimeoutError`。
 
 应用可以在 `onRequest` 注入租户、语言、追踪 ID 等 Header，在 `onError`
@@ -43,6 +46,25 @@ React 和 Vue 应用都在 `app/runtime/runtime-services.ts` 中创建唯一的�
 
 Token 自动刷新暂未内置。实现时应在应用层维护单例刷新任务，避免多个并发
 401 同时刷新，并通过拦截器重放原请求。公共客户端不应直接访问用户 Store。
+
+### 请求客户端扩展路径
+
+当前客户端基于原生 Fetch。以下能力出现需求时，按对应方案补充：
+
+- 上传进度：Fetch 没有 upload progress 事件，需在 `@repo/request` 内基于
+  XMLHttpRequest 新增 `client.upload()`，复用现有 Token、拦截器和错误
+  归一化管线，`AbortSignal` 手动接线到 `xhr.abort()`。
+- XSRF：属于应用策略，在应用 `runtime-services.ts` 的 `onRequest` 中读取
+  `XSRF-TOKEN` Cookie 并回写 `X-XSRF-TOKEN` 请求头即可，公共包无需改动。
+  当前 Bearer Token 鉴权暂无此攻击面。
+- 拦截器数组：少量拦截器可在应用层按顺序组合为单个 `onRequest`；数量变多
+  后将钩子升级为同时接受数组，保持单函数用法兼容，按数组顺序执行。
+- 重试：简单场景在公共包增加可选 `retry` 配置：指数退避加抖动、尊重
+  `Retry-After`、默认不重试非幂等请求、退避期间响应调用方取消。若出现
+  重试预算、熔断等复杂需求，优先评估成熟依赖而非继续自研。
+- 若同时出现多项硬需求（例如上传进度加重试，且团队已有 axios 监控生态），
+  应重新评估整体迁移 axios 的时机；迁移需在业务大量接入请求客户端之前完成，
+  避免错误模型和契约测试的迁移成本随业务调用点增长。
 
 ## 错误上报
 
