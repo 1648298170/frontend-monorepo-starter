@@ -93,6 +93,7 @@ frontend-monorepo-starter/
     conventions/             # 协作约定
     guides/                  # 新同事教学与上手指南
     ci/                      # CI 预留设计
+    design/                  # 设计规范（INGOO UI 提取）
 
   templates/
     apps/
