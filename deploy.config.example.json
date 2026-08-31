@@ -1,0 +1,60 @@
+{
+  "vue-web": {
+    "test": {
+      "host": "192.0.2.10",
+      "port": 22,
+      "user": "deploy",
+      "sshKeyPath": "~/.ssh/id_rsa",
+      "deployPath": "/data/nginx/html/vue-web",
+      "outDir": "apps/vue-web/dist",
+      "buildCmd": "build:test"
+    },
+    "uat": {
+      "host": "198.51.100.20",
+      "port": 22,
+      "user": "deploy",
+      "sshKeyPath": "~/.ssh/id_rsa",
+      "deployPath": "/data/nginx/html/vue-web",
+      "outDir": "apps/vue-web/dist",
+      "buildCmd": "build:uat"
+    },
+    "production": {
+      "host": "203.0.113.30",
+      "port": 22,
+      "user": "deploy",
+      "sshKeyPath": "~/.ssh/id_rsa",
+      "deployPath": "/data/nginx/html/vue-web",
+      "outDir": "apps/vue-web/dist",
+      "buildCmd": "build"
+    }
+  },
+  "react-web": {
+    "test": {
+      "host": "192.0.2.10",
+      "port": 22,
+      "user": "deploy",
+      "sshKeyPath": "~/.ssh/id_rsa",
+      "deployPath": "/data/nginx/html/react-web",
+      "outDir": "apps/react-web/dist",
+      "buildCmd": "build:test"
+    },
+    "uat": {
+      "host": "198.51.100.20",
+      "port": 22,
+      "user": "deploy",
+      "sshKeyPath": "~/.ssh/id_rsa",
+      "deployPath": "/data/nginx/html/react-web",
+      "outDir": "apps/react-web/dist",
+      "buildCmd": "build:uat"
+    },
+    "production": {
+      "host": "203.0.113.30",
+      "port": 22,
+      "user": "deploy",
+      "sshKeyPath": "~/.ssh/id_rsa",
+      "deployPath": "/data/nginx/html/react-web",
+      "outDir": "apps/react-web/dist",
+      "buildCmd": "build"
+    }
+  }
+}

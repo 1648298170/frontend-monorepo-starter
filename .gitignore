@@ -5,3 +5,6 @@ reports
 .turbo
 *.local
 *.tsbuildinfo
+
+# 真实部署配置含服务器 IP 与账号，只提交 deploy.config.example.json 模板
+deploy.config.json
