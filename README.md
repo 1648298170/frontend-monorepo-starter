@@ -342,6 +342,20 @@ apps/vue-web/dist/
 Monorepo 根目录不会额外生成统一的 `dist/`。Turbo 已将应用的 `dist/**`
 声明为构建输出，缓存命中时也会自动恢复产物。
 
+一键发布（构建 → 打包 → 上传 → 服务器原子切换，支持回滚）：
+
+```bash
+cp deploy.config.example.json deploy.config.json   # 首次使用先填入真实服务器信息
+pnpm ship vue-web test                             # 发布 vue-web 到 test 环境
+pnpm ship react-web production --dry-run           # 演练，不实际执行
+pnpm ship vue-web production --rollback            # 交互式回滚
+```
+
+发布环境、分支映射、管线流程与安全约定见
+[`docs/conventions/deployment.md`](docs/conventions/deployment.md)，
+服务器铺设与兜底通道运维细节见
+[`deploy-shell/README.md`](deploy-shell/README.md)。
+
 格式化：
 
 ```bash
@@ -364,9 +378,10 @@ pnpm g component --app react-web --scope app --name app-header
 以下能力已经在结构或文档中预留，但第一版没有实现：
 
 - GitLab CI
-- 自动部署
 - Storybook
 - changesets 发包流程
+
+一键发布（`pnpm ship` 与 `deploy-shell/` 兜底通道）已可用。
 
 其中 GitLab CI 的设计说明在：
 
