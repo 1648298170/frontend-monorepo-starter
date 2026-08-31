@@ -1,21 +1,21 @@
 .repo-metric-card {
   display: grid;
-  gap: var(--repo-ui-space-2);
-  padding: var(--repo-ui-space-4);
+  gap: var(--repo-ui-spacing-tight);
+  padding: var(--repo-ui-spacing-base);
 }
 
 .repo-metric-card[data-tone="success"] {
-  border-color: var(--repo-ui-color-success-border);
-  background: var(--repo-ui-color-success-surface);
+  border-color: var(--repo-ui-color-success-light-active);
+  background: var(--repo-ui-color-success-light);
 }
 
 .repo-metric-card__label {
-  color: var(--repo-ui-color-text-muted);
-  font-size: var(--repo-ui-font-size-small);
+  color: var(--repo-ui-color-text-2);
+  font-size: var(--repo-ui-font-size-2);
 }
 
 .repo-metric-card__value {
-  color: var(--repo-ui-color-text);
-  font-size: var(--repo-ui-font-size-large);
+  color: var(--repo-ui-color-text-1);
+  font-size: var(--repo-ui-font-size-5);
   line-height: 1.2;
 }

@@ -113,12 +113,12 @@ export function reactUiTypesTemplate({ pascalName }) {
 export function reactUiStyleTemplate({ kebabName }) {
   return `/* 当前文件只维护 ${kebabName} 组件自身样式，公共 Token 和基础表面样式由 UI 包统一提供。 */
 .repo-${kebabName} {
-  padding: var(--repo-ui-space-4);
+  padding: var(--repo-ui-spacing-base);
 }
 
 .repo-${kebabName}__title {
   margin: 0;
-  font-size: var(--repo-ui-font-size-large);
+  font-size: var(--repo-ui-font-size-5);
 }
 `;
 }

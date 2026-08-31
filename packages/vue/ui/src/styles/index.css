@@ -1,11 +1,13 @@
 /* 统一加载跨框架 Design Token，组件样式只消费变量，不重复声明视觉值。 */
 @import "@repo/design-tokens/tokens.css";
 
-/* UI 包内通用的表面容器，适用于卡片、面板等带边框和背景的组件。 */
+/* UI 包内通用的表面容器，适用于卡片、面板等组件。
+ * 视觉取 INGOO 卡片范式：弱发丝线描边 + 卡片阴影（token 见 @repo/design-tokens）。 */
 .repo-ui-surface {
   min-width: 0;
-  border: 1px solid var(--repo-ui-color-border);
-  border-radius: var(--repo-ui-radius-medium);
-  background: var(--repo-ui-color-surface);
-  color: var(--repo-ui-color-text);
+  border: 1px solid var(--repo-ui-color-hairline);
+  border-radius: var(--repo-ui-radius-3);
+  background: var(--repo-ui-color-bg-1);
+  color: var(--repo-ui-color-text-1);
+  box-shadow: var(--repo-ui-shadow-3);
 }
