@@ -1,3 +1,24 @@
+/*
+ * INGOO UI 圆角令牌（foundation 原语层）。
+ *
+ * 来源：蓝湖「APP」规范页 A2「圆角」token 表，值取标注原值。
+ * 源表仅 small/medium/large 三个变量名，4px/8px/40px 三行未导出名，
+ * 此处按档位编号命名（编号为推断命名，值全部原样）。
+ * 设计稿圆角样方未导出 border-radius CSS，本表数值即唯一权威来源。
+ */
 :root {
-  --repo-ui-radius-medium: 8px;
+  --repo-ui-radius-1: 2px; /* 源名 small */
+  --repo-ui-radius-2: 4px; /* 源未命名 */
+  --repo-ui-radius-3: 8px; /* 源未命名 */
+  --repo-ui-radius-4: 16px; /* 源名 medium */
+  --repo-ui-radius-5: 32px; /* 源名 large */
+  --repo-ui-radius-6: 40px; /* 源未命名 */
+
+  /*
+   * ---- 兼容别名层（旧占位变量 → 新阶梯） ----
+   * 新代码请直接使用上方原语变量。
+   */
+
+  /* 原占位值 8px 保持不变；注意 INGOO 语义 medium=16px 对应 radius-4，勿混用 */
+  --repo-ui-radius-medium: var(--repo-ui-radius-3);
 }

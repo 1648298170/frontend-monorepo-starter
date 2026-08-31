@@ -1,0 +1,30 @@
+/*
+ * INGOO UI 尺寸令牌（foundation 原语层）。
+ *
+ * 来源：蓝湖「APP」规范页 A2「尺寸」三张 token 表
+ * （高度 / 描边尺寸 / 图标尺寸）。源表部分行未导出变量名
+ * （高度 8px/48px、图标 38px/48px），推断命名并逐条注明；
+ * 图标 24px 与 38px 在源表中同名 $width-icon-extra-large，按首现值落 24px。
+ */
+:root {
+  /* ---- 控件高度（源 $height-control-*） ---- */
+  --repo-ui-height-control-small: 4px;
+  --repo-ui-height-control-medium: 8px; /* 源未命名 */
+  --repo-ui-height-control-default: 16px;
+  --repo-ui-height-control-large: 32px;
+  --repo-ui-height-control-max: 48px; /* 源未命名 */
+
+  /* ---- 描边粗细（源 $border-thickness-*） ---- */
+  --repo-ui-border-width: 0; /* $border-thickness */
+  --repo-ui-border-width-control: 0.5px;
+  --repo-ui-border-width-control-focus: 0.5px;
+
+  /* ---- 图标尺寸（源 $width-icon-*） ---- */
+  --repo-ui-icon-size-extra-small: 8px;
+  --repo-ui-icon-size-small: 14px;
+  --repo-ui-icon-size-medium: 16px;
+  --repo-ui-icon-size-large: 20px;
+  --repo-ui-icon-size-extra-large: 24px;
+  --repo-ui-icon-size-xxl: 38px; /* 源表中与 24px 同名的第二值，单列 */
+  --repo-ui-icon-size-max: 48px; /* 源未命名 */
+}

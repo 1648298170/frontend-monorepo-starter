@@ -1,4 +1,68 @@
+/*
+ * INGOO UI 字体排印令牌（foundation 原语层）。
+ *
+ * 来源：蓝湖项目「APP」设计规范页 A1「基础&功能色」（字阶/行高/字重）
+ * 与 A7「输入类」（字体栈），值取自设计稿 CSS 标注原值。
+ *
+ * 字阶与行高配对关系：
+ *   size-1 10px ↔ line-height-1；size-2 14px ↔ line-height-2；
+ *   size-3 16px / size-4 20px ↔ line-height-3；size-5 28px / size-6 48px ↔ line-height-4。
+ * A7 组件级行高（按钮 14px/lh22、16px/lh24 等）不进 foundation，
+ * 由组件实现时自行声明。
+ */
 :root {
-  --repo-ui-font-size-small: 14px;
-  --repo-ui-font-size-large: 24px;
+  /* ---- 字体栈（回退顺序与设计稿一致，勿删减或重排） ---- */
+
+  /* 基础/标题体系（源 A1：Inter 首选） */
+  --repo-ui-font-family:
+    "Inter", "PingFang SC", "Microsoft YaHei", "Hiragino Sans GB", sans-serif;
+
+  /* 组件矩阵文字（源 A7：Roboto 首选） */
+  --repo-ui-font-family-component:
+    "Roboto", "PingFang SC", "Microsoft YaHei", "Hiragino Sans GB", sans-serif;
+
+  /* 拉丁/葡语文案（源 A7：Poppins 首选） */
+  --repo-ui-font-family-latin:
+    "Poppins", "PingFang SC", "Microsoft YaHei", "Hiragino Sans GB", sans-serif;
+
+  /* ---- 字号阶梯（源 A1 全部档位，编号即档位） ---- */
+  --repo-ui-font-size-1: 10px; /* 刻度/辅助小标 */
+  --repo-ui-font-size-2: 14px; /* 表格、标注正文 */
+  --repo-ui-font-size-3: 16px; /* 分组描述 */
+  --repo-ui-font-size-4: 20px; /* 子分组标题 */
+  --repo-ui-font-size-5: 28px; /* 章标题 */
+  --repo-ui-font-size-6: 48px; /* 页面主标题 */
+
+  /* ---- 行高阶梯（与字号配对，见文件头注释） ---- */
+  --repo-ui-line-height-1: 1;
+  --repo-ui-line-height-2: 20px;
+  --repo-ui-line-height-3: 28px;
+  --repo-ui-line-height-4: 40px;
+
+  /* ---- 字重（A1 使用四档 + A2 字重表 Light/Medium 两档补充） ---- */
+  --repo-ui-font-weight-light: 300; /* A2 字重表 Light */
+  --repo-ui-font-weight-regular: 400; /* A2 Regular */
+  --repo-ui-font-weight-medium: 500; /* A2 Medium */
+  --repo-ui-font-weight-semibold: 600;
+  --repo-ui-font-weight-bold: 700; /* A2 Bold */
+  --repo-ui-font-weight-extrabold: 800;
+
+  /*
+   * A2 语义字号映射（组件体系）：$font-size-small=10px → font-size-1、
+   * regular=14px → font-size-2、header-6=16px → font-size-3（均已存在于上方阶梯）；
+   * header-5=18px 不在 A1 文档字阶中，独立落地如下。
+   */
+  --repo-ui-font-size-header-5: 18px; /* $font-size-header-5 */
+
+  /*
+   * ---- 兼容别名层（旧占位变量 → 新字阶） ----
+   * 新代码请直接使用上方原语变量。
+   */
+  --repo-ui-font-size-small: var(
+    --repo-ui-font-size-2
+  ); /* 14px，与原占位一致 */
+
+  --repo-ui-font-size-large: var(
+    --repo-ui-font-size-5
+  ); /* 原占位 24px 不在 INGOO 字阶中，就近映射到 28px */
 }

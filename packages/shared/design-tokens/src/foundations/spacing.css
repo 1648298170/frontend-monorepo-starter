@@ -1,4 +1,30 @@
+/*
+ * INGOO UI 间距令牌（foundation 原语层）。
+ *
+ * 来源：蓝湖「APP」规范页 A2「间距」token 表（0~48px 共 11 级）。
+ * 源表 0~8px 档命名为 $spacing-*，12~40px 档命名为 $width-base* / $width-*
+ * （源命名混用，此处统一为 spacing-* 语义名，源名保留在注释中）；
+ * 48px 行源未导出名，推断命名为 max。
+ */
 :root {
-  --repo-ui-space-2: 8px;
-  --repo-ui-space-4: 18px;
+  --repo-ui-spacing-none: 0; /* $spacing-none */
+  --repo-ui-spacing-super-tight: 2px; /* $spacing-super-tight */
+  --repo-ui-spacing-extra-tight: 4px; /* $spacing-extra-tight */
+  --repo-ui-spacing-tight: 8px; /* $spacing-tight */
+  --repo-ui-spacing-base-tight: 12px; /* $width-base-tight */
+  --repo-ui-spacing-base: 16px; /* $width-base */
+  --repo-ui-spacing-base-loose: 20px; /* $width-base-loose */
+  --repo-ui-spacing-loose: 24px; /* $width-loose */
+  --repo-ui-spacing-extra-loose: 32px; /* $width-extra-loose */
+  --repo-ui-spacing-super-loose: 40px; /* $width-super-loose */
+  --repo-ui-spacing-max: 48px; /* 源未命名，推断命名 */
+
+  /*
+   * ---- 兼容别名层（旧占位变量 → 新阶梯） ----
+   * 新代码请直接使用上方原语变量。
+   */
+  --repo-ui-space-2: var(--repo-ui-spacing-tight); /* 原占位 8px，同值 */
+
+  /* 原占位 18px 不在 INGOO 间距阶梯中，就近映射到 16px */
+  --repo-ui-space-4: var(--repo-ui-spacing-base);
 }

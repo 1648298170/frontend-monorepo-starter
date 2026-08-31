@@ -8,6 +8,8 @@
     "./color.css": "./src/foundations/color.css",
     "./spacing.css": "./src/foundations/spacing.css",
     "./radius.css": "./src/foundations/radius.css",
+    "./size.css": "./src/foundations/size.css",
+    "./shadow.css": "./src/foundations/shadow.css",
     "./typography.css": "./src/foundations/typography.css"
   },
   "scripts": {

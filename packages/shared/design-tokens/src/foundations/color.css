@@ -1,8 +1,138 @@
+/*
+ * INGOO UI 颜色令牌（foundation 原语层）。
+ *
+ * 来源：蓝湖项目「APP」设计规范页 A1「基础&功能色」（image_id 39bee524），
+ * 值取自设计稿 CSS 标注原值，未做任何四舍五入；源 token 名以注释形式保留溯源。
+ * 透明度写法说明：源数据为 "#FA6900 50%" 等，此处按仓库 stylelint 现代记法
+ * 写为 rgb(250 105 0 / 50%)，数值与源值完全一致。
+ *
+ * 已知设计稿内部不一致（按原值保留，实现组件时注意）：
+ * 1. A7 中 Small 尺寸禁用态描边/链接文字用 rgba(252,150,77,0.5)（#FC964D 50%），
+ *    而 Medium/Large 禁用态用 rgba(250,105,0,0.5)（#FA6900 50%）。
+ * 2. A7 悬浮态"文字"用 #FC964D，与 A1 的 primary-hover #E56000（底色 token）不同：
+ *    前者是文字色，后者是填充底色，实现时不要混用。
+ */
 :root {
-  --repo-ui-color-surface: #fff;
-  --repo-ui-color-border: #d7dee8;
-  --repo-ui-color-text: #172033;
-  --repo-ui-color-text-muted: #5c6675;
-  --repo-ui-color-success-surface: #f1fbf6;
-  --repo-ui-color-success-border: #96d4b7;
+  /* ---- 功能色：主要 primary（源 --color-primary 系） ---- */
+  --repo-ui-color-primary: #fa6900;
+  --repo-ui-color-primary-hover: #e56000;
+  --repo-ui-color-primary-active: #f36600;
+  --repo-ui-color-primary-disabled: rgb(250 105 0 / 50%);
+
+  /* ---- 功能色：次要 secondary ---- */
+  --repo-ui-color-secondary: #0b71f4;
+  --repo-ui-color-secondary-hover: #0062d6;
+  --repo-ui-color-secondary-active: #004fb3;
+  --repo-ui-color-secondary-disabled: rgb(11 113 244 / 50%);
+
+  /* ---- 功能色：第三 tertiary（含 light 浅色系） ---- */
+  --repo-ui-color-tertiary: #171717;
+  --repo-ui-color-tertiary-hover: #585858;
+  --repo-ui-color-tertiary-active: #1c1f23;
+  --repo-ui-color-tertiary-light: #f9f9f9;
+  --repo-ui-color-tertiary-light-hover: #e6e8ea;
+  --repo-ui-color-tertiary-light-active: #c6cacd;
+
+  /* ---- 功能色：信息 info ---- */
+  --repo-ui-color-info: #0077fa;
+  --repo-ui-color-info-hover: #0062d6;
+  --repo-ui-color-info-active: #004fb3;
+  --repo-ui-color-info-disabled: #98cdfd;
+  --repo-ui-color-info-light: #eaf5ff;
+  --repo-ui-color-info-light-hover: #cbe7fe;
+  --repo-ui-color-info-light-active: #98cdfd;
+
+  /* ---- 功能色：成功 success ---- */
+  --repo-ui-color-success: #52c41a;
+  --repo-ui-color-success-hover: #30953b;
+  --repo-ui-color-success-active: #25772f;
+  --repo-ui-color-success-disabled: #a4e0a7;
+  --repo-ui-color-success-light: #ecf7ec;
+  --repo-ui-color-success-light-hover: #d0f0d1;
+  --repo-ui-color-success-light-active: #a4e0a7;
+
+  /* ---- 功能色：警示 warning（源数据无 light-active） ---- */
+  --repo-ui-color-warning: #faad14;
+  --repo-ui-color-warning-hover: #d26700;
+  --repo-ui-color-warning-active: #a84a00;
+  --repo-ui-color-warning-disabled: #fff8ea;
+  --repo-ui-color-warning-light: #feeecc;
+  --repo-ui-color-warning-light-hover: #fed998;
+
+  /* ---- 功能色：危险 danger（源数据无 light-active） ---- */
+  --repo-ui-color-danger: #f93920;
+  --repo-ui-color-danger-hover: #d52515;
+  --repo-ui-color-danger-active: #b2140c;
+  --repo-ui-color-danger-disabled: #fef2ed;
+  --repo-ui-color-danger-light: #feddd2;
+  --repo-ui-color-danger-light-hover: #fdb7a5;
+
+  /* ---- 文本与图标（源 --color-text-0..6，序号保留源命名） ---- */
+  --repo-ui-color-text-0: #525252;
+  --repo-ui-color-text-1: #424242;
+  --repo-ui-color-text-2: #7c7c7c;
+  --repo-ui-color-text-3: #d8d8d8;
+  --repo-ui-color-text-4: #fa6900; /* 强调橙 */
+  --repo-ui-color-text-5: #0b71f4; /* 链接蓝 */
+  --repo-ui-color-text-6: #fff; /* 深底上的反白文字 */
+
+  /* 说明文字灰（源 rgba(64,67,70,1)，A1/A2 规范页描述文字，未纳入源 text-0..6 序列） */
+  --repo-ui-color-text-description: #404346;
+
+  /* ---- 链接色（源 --color-text-0..2，链接组内同名异值，序号保留） ---- */
+  --repo-ui-color-link-0: #424242;
+  --repo-ui-color-link-1: #fa6900;
+  --repo-ui-color-link-2: #0068d7;
+
+  /* ---- 背景（源 --color-bg-1） ---- */
+  --repo-ui-color-bg-1: #fff;
+
+  /* ---- 填充（源 --color-fill-0/1） ---- */
+  --repo-ui-color-fill-0: #fff;
+  --repo-ui-color-fill-1: rgb(46 50 56 / 9%);
+
+  /* ---- 描边（源 --color-border 语义为强调描边；focus 三变体源数据未命名） ---- */
+  --repo-ui-color-border-accent: #fa6900;
+  --repo-ui-color-border-focus: #feb033;
+  --repo-ui-color-border-focus-2: #d9d9d9;
+  --repo-ui-color-border-focus-3: #e6e6e6;
+
+  /* ---- 禁用态（源 --color-disabled-*） ---- */
+  --repo-ui-color-disabled-text: rgb(250 105 0 / 50%);
+  --repo-ui-color-disabled-bg: #d9d9d9;
+  --repo-ui-color-disabled-border: #a1a1a1;
+
+  /* ---- 常量色（源 --black / --white） ---- */
+  --repo-ui-color-static-black: #000;
+  --repo-ui-color-static-white: #fff;
+
+  /* ---- 拟阴影（源 --color-shadow #1C1F23 8%） ---- */
+  --repo-ui-color-shadow: rgb(28 31 35 / 8%);
+
+  /*
+   * 发丝线：A1/A7 全部分隔线/规格行统一使用的描边色
+   * （源标注 border: 1.0px solid rgba(28,31,35,0.08)），与拟阴影同值但语义独立。
+   */
+  --repo-ui-color-hairline: rgb(28 31 35 / 8%);
+
+  /*
+   * ---- 兼容别名层（旧占位变量 → INGOO 原语） ----
+   * 供既有 UI 包样式、MetricCard 与代码生成器模板继续引用；
+   * 新代码请直接使用上方原语变量，不要再扩展本层。
+   */
+  --repo-ui-color-surface: var(--repo-ui-color-bg-1);
+  --repo-ui-color-border: var(
+    --repo-ui-color-border-focus-2
+  ); /* 原占位 #d7dee8 → 中性浅灰 #d9d9d9 */
+
+  --repo-ui-color-text: var(
+    --repo-ui-color-text-1
+  ); /* 原占位 #172033 → #424242 */
+
+  --repo-ui-color-text-muted: var(
+    --repo-ui-color-text-2
+  ); /* 原占位 #5c6675 → #7c7c7c */
+
+  --repo-ui-color-success-surface: var(--repo-ui-color-success-light);
+  --repo-ui-color-success-border: var(--repo-ui-color-success-light-active);
 }

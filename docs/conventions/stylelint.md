@@ -42,7 +42,7 @@ Sass/SCSS + BEM 命名 + Stylelint 规则承载。
 例如：
 
 ```css
---repo-ui-color-text: #172033;
+--repo-ui-color-primary: #fa6900;
 ```
 
 该规则只作用于共享 Design Token 包。应用和其他 package 可以定义自己的变量命名空间：
