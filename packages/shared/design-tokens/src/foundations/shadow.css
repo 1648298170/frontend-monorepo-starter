@@ -1,5 +1,5 @@
 /*
- * INGOO UI 阴影令牌（foundation 原语层）。
+ * UI 设计规范阴影令牌（foundation 原语层）。
  *
  * 来源：蓝湖「APP」规范页 A2「阴影」token 表。源值记法为
  * 0.0px 8.0px 32.0px rgba(0,0,0,0.15) 等，此处按仓库 stylelint
@@ -7,7 +7,7 @@
  *
  * 注意：A3 组件页存在漂移值（0 8px 32px rgba(0,0,0,0.16)、
  * 0 4px 6px rgba(216,216,216,0.25)），以本表（token 定义页）为权威，
- * 漂移值记录于 docs/design/ingoo-ui-spec.md 不进包。
+ * 漂移值记录于 docs/design/ui-spec.md 不进包。
  */
 :root {
   /* $shadow-1：重阴影（浮层、底部导航） */

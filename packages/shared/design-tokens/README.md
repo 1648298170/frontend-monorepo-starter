@@ -27,13 +27,13 @@ src/
 
 ## 令牌来源
 
-`color.css` 与 `typography.css` 的原语层取自 INGOO UI 设计规范
+`color.css` 与 `typography.css` 的原语层取自 UI 设计规范
 （蓝湖项目「APP」，规范页 A1「基础&功能色」与 A7「输入类」的 CSS 标注原值）。
 `spacing.css` / `radius.css` / `size.css` / `shadow.css` 取自规范页
 A2「字体排版/圆角/阴影/尺寸/间距」的 token 表原值。
 
 完整规范（A1–A7 组件矩阵、跨页不一致清单、命名映射）见
-[`docs/design/ingoo-ui-spec.md`](../../docs/design/ingoo-ui-spec.md)。
+[`docs/design/ui-spec.md`](../../docs/design/ui-spec.md)。
 
 ## 分层结构
 

@@ -1,4 +1,4 @@
-# INGOO UI 设计规范（蓝湖 A1–A7 提取）
+# UI 设计规范（蓝湖 A1–A7 提取）
 
 本文档汇总自蓝湖项目「APP」（pid `99649fc4-223c-442c-9ef5-429092eda0a9`）
 的 7 张设计规范页（A1–A7，均为 Sketch 标注降级模式导出），是
@@ -145,11 +145,11 @@ Tooltip × HelpText 全组合；边框/填充/圆角值仅在底图。
 `$spacing-*`/`$width-*` → `--repo-ui-spacing-*`；`$shadow-N` → `--repo-ui-shadow-N`；
 数值档位（圆角/高度/图标）→ 编号或语义命名。兼容别名层
 （`--repo-ui-color-surface`、`--repo-ui-space-2` 等旧占位名）重定向至最近
-INGOO 值，映射关系逐条注释在各 foundation 文件内。
+设计规范值，映射关系逐条注释在各 foundation 文件内。
 
-## 八、产品实现现状（2026-08 对 ingoo-monorepo-starter 交叉验证）
+## 八、产品实现现状（2026-08 对既有产品仓库交叉验证）
 
-INGOO 产品仓库（pnpm monorepo，5 个 uniapp + agent/admin/adplatform）的
+既有产品仓库（pnpm monorepo，5 个 uniapp + agent/admin/adplatform）的
 主题层与设计稿存在明显漂移，本仓库的 token 包已是权威值的更完整载体：
 
 - **无集中 token 层**：产品仓库的 `packages/shared/design-tokens` 仍是

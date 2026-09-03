@@ -1,5 +1,5 @@
 /*
- * INGOO UI 字体排印令牌（foundation 原语层）。
+ * UI 设计规范字体排印令牌（foundation 原语层）。
  *
  * 来源：蓝湖项目「APP」设计规范页 A1「基础&功能色」（字阶/行高/字重）
  * 与 A7「输入类」（字体栈），值取自设计稿 CSS 标注原值。
@@ -64,5 +64,5 @@
 
   --repo-ui-font-size-large: var(
     --repo-ui-font-size-5
-  ); /* 原占位 24px 不在 INGOO 字阶中，就近映射到 28px */
+  ); /* 原占位 24px 不在设计规范字阶中，就近映射到 28px */
 }

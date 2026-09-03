@@ -2,7 +2,7 @@
 @import "@repo/design-tokens/tokens.css";
 
 /* UI 包内通用的表面容器，适用于卡片、面板等组件。
- * 视觉取 INGOO 卡片范式：弱发丝线描边 + 卡片阴影（token 见 @repo/design-tokens）。 */
+ * 视觉取设计规范卡片范式：弱发丝线描边 + 卡片阴影（token 见 @repo/design-tokens）。 */
 .repo-ui-surface {
   min-width: 0;
   border: 1px solid var(--repo-ui-color-hairline);

@@ -1,5 +1,5 @@
 /*
- * INGOO UI 间距令牌（foundation 原语层）。
+ * UI 设计规范间距令牌（foundation 原语层）。
  *
  * 来源：蓝湖「APP」规范页 A2「间距」token 表（0~48px 共 11 级）。
  * 源表 0~8px 档命名为 $spacing-*，12~40px 档命名为 $width-base* / $width-*
@@ -25,6 +25,6 @@
    */
   --repo-ui-space-2: var(--repo-ui-spacing-tight); /* 原占位 8px，同值 */
 
-  /* 原占位 18px 不在 INGOO 间距阶梯中，就近映射到 16px */
+  /* 原占位 18px 不在设计规范间距阶梯中，就近映射到 16px */
   --repo-ui-space-4: var(--repo-ui-spacing-base);
 }
